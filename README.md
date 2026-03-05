@@ -1,8 +1,8 @@
-# TurboWarp Extension Gallery
+# NitroBolt Extension Gallery
 
-User-contributed unsandboxed extension gallery for TurboWarp.
+User-contributed unsandboxed extension gallery for NitroBolt.
 
-https://extensions.turbowarp.org/
+https://extensions.nitrobolt.org/
 
 ## Contributing
 

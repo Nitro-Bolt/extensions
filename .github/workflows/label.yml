@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Disabled by default for forks since this is probably not useful.
-    if: ${{ github.repository == 'TurboWarp/extensions' }}
+    if: ${{ github.repository == 'Nitro-Bolt/extensions' }}
 
     permissions:
       pull-requests: write

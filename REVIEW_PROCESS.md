@@ -1,6 +1,6 @@
 # Extension review
 
-The status quo of having GarboMuffin review everything is an abject failure. The goal in this document is to define the expectations for approving and merging changes.
+The status quo of having Cubester review everything is an abject failure. The goal in this document is to define the expectations for approving and merging changes.
 
 The requirements for merging a pull request are:
 
@@ -52,4 +52,4 @@ Any logic change inside a JavaScript file, even the most trivial one, means that
 
 ## Other things
 
-Ping GarboMuffin early and often.
+Ping Cubester early and often.

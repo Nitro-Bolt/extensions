@@ -1,7 +1,7 @@
 {
-  "New unsandboxed TurboWarp extension": {
+  "New unsandboxed NitroBolt extension": {
     "prefix": "~extension",
-    "description": "A template for an official TurboWarp extension.",
+    "description": "A template for an official NitroBolt extension.",
     "isFileTemplate": true,
     "scope": "javascript",
     "body": [

@@ -361,7 +361,7 @@ class HomepageFile extends BuildFile {
     this.host =
       mode === "development"
         ? "http://localhost:8000/"
-        : "https://extensions.turbowarp.org/";
+        : "https://extensions.nitrobolt.org/";
   }
 
   getType() {
@@ -377,7 +377,7 @@ class HomepageFile extends BuildFile {
   }
 
   getRunExtensionURL(extensionSlug) {
-    return `https://turbowarp.org/editor?extension=${this.getFullExtensionURL(
+    return `https://nitrobolt.org/editor?extension=${this.getFullExtensionURL(
       extensionSlug
     )}`;
   }
@@ -388,7 +388,7 @@ class HomepageFile extends BuildFile {
    */
   getRunSampleURL(sampleFile) {
     const path = encodeURIComponent(`samples/${sampleFile.getSlug()}`);
-    return `https://turbowarp.org/editor?project_url=${this.host}${path}`;
+    return `https://nitrobolt.org/editor?project_url=${this.host}${path}`;
   }
 
   read() {
@@ -573,7 +573,7 @@ class SitemapFile extends BuildFile {
         if (a.length > b.length) return 1;
         return a - b;
       })
-      .map((path) => `https://extensions.turbowarp.org${path}`)
+      .map((path) => `https://extensions.nitrobolt.org${path}`)
       .map((absoluteURL) => `<url><loc>${absoluteURL}</loc></url>`)
       .join("\n");
 
@@ -627,7 +627,7 @@ class SampleFile extends BuildFile {
 
     for (const url of urls) {
       if (
-        !url.startsWith("https://extensions.turbowarp.org/") ||
+        !url.startsWith("https://extensions.nitrobolt.org/") ||
         !url.endsWith(".js")
       ) {
         throw new Error(`Invalid extension URL for sample: ${url}`);
