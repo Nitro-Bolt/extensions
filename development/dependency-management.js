@@ -259,6 +259,8 @@ const getAllImportDependencyCalls = (js) => {
       // No extra properties
     } else if (type === "evalAndReturn") {
       jsImport.returnExpression = args[1];
+
+      if (args[0].match(/\/xmp\.full\.js$/)) continue;
     } else {
       throw new Error(`Scratch.external call with unknown type: ${type}`);
     }

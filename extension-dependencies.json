@@ -1,3 +1,8 @@
 {
-  "dependencies": {}
+  "dependencies": {
+    "https://raw.githubusercontent.com/NishiOwO/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.js": {
+      "sha256": "01d3dc24596fd5024be627952cc1985d954a1d7fdc338423d6a8ae6bba9e519b",
+      "contentType": "application/octet-stream"
+    }
+  }
 }
