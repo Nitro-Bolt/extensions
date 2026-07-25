@@ -269,7 +269,8 @@
               VEC: { type: Scratch.ArgumentType.ARRAY },
             },
             color1: "#4287f5",
-            hideFromPalette: !runtime.extensionManager?.isExtensionLoaded("stretch"),
+            hideFromPalette:
+              !runtime.extensionManager?.isExtensionLoaded("stretch"),
           },
         ],
         menus: {
