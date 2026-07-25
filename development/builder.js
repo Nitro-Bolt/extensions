@@ -870,7 +870,7 @@ class Builder {
     // Don't rely on node_modules being stored in a specific location or having a specific structure
     // so that this works when we are a dependency in a bigger npm tree.
     const scratchblocksPath = urlUtil.fileURLToPath(
-      import.meta.resolve("@turbowarp/scratchblocks")
+      import.meta.resolve("@nitro-bolt/scratchblocks")
     );
     build.files["/docs-internal/scratchblocks.js"] = new BuildFile(
       scratchblocksPath

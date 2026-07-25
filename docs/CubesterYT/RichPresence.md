@@ -55,7 +55,7 @@ turn timestamp [on v] :: #4D5057
 Finally, this will allow you to fetch the current Presence Data:
 
 ```scratch
-(rich presence data :: #4D5057)
+{rich presence data :: #4D5057}
 ```
 
 ## Setting the Presence

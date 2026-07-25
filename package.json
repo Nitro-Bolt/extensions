@@ -27,9 +27,9 @@
   },
   "homepage": "https://github.com/Nitro-Bolt/extensions#readme",
   "dependencies": {
+    "@nitro-bolt/scratchblocks": "^1.1.0",
     "@nitro-bolt/types": "github:Nitro-Bolt/types#nb",
     "@turbowarp/json": "^0.1.2",
-    "@turbowarp/scratchblocks": "^3.6.7",
     "adm-zip": "^0.5.16",
     "chokidar": "^4.0.3",
     "ejs": "^3.1.10",
