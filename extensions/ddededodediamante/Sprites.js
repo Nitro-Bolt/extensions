@@ -205,6 +205,7 @@
               "x position",
               "y position",
               "direction",
+              "rotation style",
               "costume #",
               "costume name",
               "size",
@@ -312,6 +313,8 @@
           return sprite.y;
         case "direction":
           return sprite.direction;
+        case "rotation style":
+          return sprite.rotationStyle;
         case "costume #":
           return sprite.currentCostume + 1;
         case "costume name": {
