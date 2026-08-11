@@ -11,15 +11,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Validate
-        run: npm run validate
+        run: pnpm run validate
 
   lint:
     runs-on: ubuntu-latest
@@ -28,15 +30,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
   format:
     runs-on: ubuntu-latest
@@ -45,20 +49,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Check format
         shell: bash
         run: |
           # Rewrite the prettier output format into the GitHub Actions annotation format
           # This is a hack, but this is easier than reimplementing the prettier CLI's ignore
           # rules ourselves.
-          NO_COLOR=1 npm run check-format 2> >(tee >( \
+          NO_COLOR=1 pnpm run check-format 2> >(tee >( \
             grep -v 'Run Prettier with --write to fix' | \
             sed -e 's/^\[warn] \(.*\)$/::warning file=\1,line=1::File was not formatted with prettier. Usually, commenting !format will fix this./' \
           ))
@@ -70,13 +76,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Generate type warnings
         run: node development/ci-generate-type-warnings.js
         env:

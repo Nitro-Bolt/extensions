@@ -34,14 +34,16 @@ jobs:
         env:
           PR_NUM: "${{ github.event.issue.number }}"
           GH_TOKEN: "${{ github.token }}"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Format
-        run: npm run format
+        run: pnpm run format
       - name: Upload formatted code
         uses: actions/upload-artifact@v4
         with:
@@ -91,13 +93,13 @@ jobs:
 
           commit_failed() {
             echo "No changes to commit"
-            gh pr comment "$PR_NUM" -b "The formatting bot didn't find any formatting issues. It currently only checks the extensions folder. The author or a maintainer can run terminal command 'npm run format' manually to format all files."
+            gh pr comment "$PR_NUM" -b "The formatting bot didn't find any formatting issues. It currently only checks the extensions folder. The author or a maintainer can run terminal command 'pnpm run format' manually to format all files."
             exit 0
           }
 
           push_failed() {
             echo "Failed to push"
-            gh pr comment "$PR_NUM" -b "The formatting bot couldn't push changes. Either maintainer edit permission is disabled or the pull request is from an organization/non-personal account. The author can run terminal command 'npm run format' manually to format all files."
+            gh pr comment "$PR_NUM" -b "The formatting bot couldn't push changes. Either maintainer edit permission is disabled or the pull request is from an organization/non-personal account. The author can run terminal command 'pnpm run format' manually to format all files."
             exit 0
           }
 

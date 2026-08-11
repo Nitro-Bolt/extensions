@@ -20,14 +20,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Upload translations
-        run: npm run upload-translations
+        run: pnpm run upload-translations
         env:
           TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX_TOKEN }}"
           TRANSIFEX_ORGANIZATION: "turbowarp"

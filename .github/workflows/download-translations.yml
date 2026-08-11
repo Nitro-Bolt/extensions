@@ -34,14 +34,16 @@ jobs:
           git checkout upstream/master
         env:
           UPSTREAM_REPO: "TurboWarp/extensions"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Download translations
-        run: npm run download-translations
+        run: pnpm run download-translations
         env:
           TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX_TOKEN }}"
           TRANSIFEX_ORGANIZATION: "turbowarp"
