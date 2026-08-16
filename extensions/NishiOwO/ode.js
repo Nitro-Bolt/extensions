@@ -985,7 +985,7 @@
             text: Scratch.translate("new world"),
           },
           {
-            opcode: "destroyWorld",
+            opcode: "worldDestroy",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("destroy world [WORLD]"),
             arguments: {
