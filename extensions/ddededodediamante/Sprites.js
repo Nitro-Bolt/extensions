@@ -377,15 +377,59 @@
      * @param {VM.RenderedTarget} newTarget
      */
     runThreadInSprite(thread, original, newTarget) {
-      const firstBlock = thread.blockContainer.getBranch(thread.peekStack(), 1);
+      const currentBlock = thread.peekStack();
+      let sourceContainer = thread.blockContainer;
+      let firstBlock = sourceContainer?.getBranch(currentBlock, 1);
+
+      // A global procedure may be executing code stored in another sprite even
+      // when the thread still points at the caller's block container. Find the
+      // container which actually owns this C block and its nested branch.
+      if (!firstBlock) {
+        const checked = new Set([sourceContainer]);
+        for (const target of runtime.targets) {
+          const blocks = target?.blocks;
+          if (!blocks || checked.has(blocks)) continue;
+          checked.add(blocks);
+          const branch = blocks.getBranch(currentBlock, 1);
+          if (branch) {
+            sourceContainer = blocks;
+            firstBlock = branch;
+            break;
+          }
+        }
+      }
       if (!firstBlock) return;
 
-      const newThread = runtime._pushThread(firstBlock, original, {
-        stackClick: false,
-      });
-      newThread.target = newTarget;
+      const sourceTarget = runtime.targets.find(
+        (target) => target.blocks === sourceContainer
+      );
 
-      if (runtime.compilerOptions.enabled) newThread.tryCompile();
+      // _pushThread compiles immediately. Delay that until the independently
+      // selected execution target and source blocks have both been assigned.
+      const compilerEnabled = runtime.compilerOptions.enabled;
+      runtime.compilerOptions.enabled = false;
+      let newThread;
+      try {
+        newThread = runtime._pushThread(firstBlock, sourceTarget || original, {
+          stackClick: false,
+        });
+      } finally {
+        runtime.compilerOptions.enabled = compilerEnabled;
+      }
+
+      newThread.target = newTarget;
+      newThread.blockContainer = sourceContainer;
+
+      if (compilerEnabled) {
+        // Do not reuse a target-specific cached result when this block runs for
+        // several different sprites.
+        newThread.stackClick = true;
+        try {
+          newThread.tryCompile();
+        } finally {
+          newThread.stackClick = false;
+        }
+      }
     }
 
     /**
