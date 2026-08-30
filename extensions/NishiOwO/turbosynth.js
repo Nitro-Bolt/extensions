@@ -20,6 +20,7 @@
     GUSPatSynth_SetProgram,
     GUSPatSynth_SetDrum,
     GUSPatSynth_ChangePitchWheel,
+    GUSPatSynth_SetVolume,
     GUSPatSynth_RenderFloat,
     GUSPatSynth_Reset,
     GUSPatSynth_Destroy;
@@ -32,7 +33,7 @@
     Scratch.ArgumentType[Scratch.extensions.isNitroBolt ? "SLIDER" : "NUMBER"];
 
   TurboSynthWASM = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/770014dd0d4aa7e6fc0a59cd4c912aec4012ee13/web/turbosynthwasm.js",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/turbosynthwasm.js",
     "TurboSynthWASM"
   );
   Module = await TurboSynthWASM();
@@ -78,6 +79,11 @@
     null,
     ["number", "number", "number"]
   );
+  GUSPatSynth_SetVolume = Module.cwrap("GUSPatSynth_SetVolume", null, [
+    "number",
+    "number",
+    "number",
+  ]);
   GUSPatSynth_RenderFloat = Module.cwrap("GUSPatSynth_RenderFloat", null, [
     "number",
     "number",
@@ -91,12 +97,12 @@
     "JSZip"
   );
   AudioPlayer = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/770014dd0d4aa7e6fc0a59cd4c912aec4012ee13/web/audioplayer.js",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/audioplayer.js",
     "AudioPlayer"
   );
 
   florestanZip = await Scratch.external.dataURL(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/770014dd0d4aa7e6fc0a59cd4c912aec4012ee13/web/florestan.zip"
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/florestan.zip"
   );
 
   function newSynthId() {
@@ -485,6 +491,33 @@
             },
           },
           {
+            opcode: "setVolume",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "set volume to [VOLUME]% semitones on channel [CHANNEL] on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              VOLUME: {
+                type: argSlider,
+                defaultValue: 100,
+                min: 0,
+                max: 100,
+                precision: 1,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
             opcode: "stopChannel",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
@@ -737,6 +770,18 @@
           synth[args.SYNTH].synth,
           args.CHANNEL,
           args.SEMITONE
+        );
+      });
+    }
+
+    setVolume(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(() => {
+        GUSPatSynth_SetVolume(
+          synth[args.SYNTH].synth,
+          args.CHANNEL,
+          args.VOLUME / 100
         );
       });
     }
