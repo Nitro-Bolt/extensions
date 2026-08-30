@@ -473,7 +473,6 @@
 
       synth[id].promise = (async () => {
         try {
-	  // @ts-ignore
           const res = await Scratch.fetch(args.PATCHES);
           zip = await JSZip.loadAsync(await res.arrayBuffer());
           cfgs = Object.keys(zip.files).filter((x) =>
