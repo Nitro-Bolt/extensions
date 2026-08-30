@@ -215,7 +215,7 @@
             opcode: "playNote",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "play note [NOTE] on channel [CHANNEL] for [BEATS] beats on synthesizer [SYNTH]"
+              "play note [NOTE] for channel [CHANNEL] for [BEATS] beats on synthesizer [SYNTH]"
             ),
             arguments: {
               NOTE: {
@@ -243,7 +243,7 @@
             opcode: "playNoteAsync",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "play note [NOTE] on channel [CHANNEL] on synthesizer [SYNTH]"
+              "play note [NOTE] for channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               NOTE: {
@@ -267,7 +267,7 @@
             opcode: "stopNote",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "stop note [NOTE] on channel [CHANNEL] on synthesizer [SYNTH]"
+              "stop note [NOTE] for channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               NOTE: {
@@ -295,7 +295,7 @@
             opcode: "playDrum",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "play drum [DRUM] on channel [CHANNEL] for [BEATS] beats on synthesizer [SYNTH]"
+              "play drum [DRUM] for channel [CHANNEL] for [BEATS] beats on synthesizer [SYNTH]"
             ),
             arguments: {
               DRUM: {
@@ -326,7 +326,7 @@
             opcode: "playDrumAsync",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "play drum [DRUM] on channel [CHANNEL] on synthesizer [SYNTH]"
+              "play drum [DRUM] for channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               DRUM: {
@@ -357,7 +357,7 @@
             opcode: "setBank",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "set bank to [BANK] for channel [CHANNEL] on synthesizer [SYNTH]"
+              "set bank to [BANK] on channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               BANK: {
@@ -384,7 +384,7 @@
             opcode: "setProgram",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "set program to [PROGRAM] for channel [CHANNEL] on synthesizer [SYNTH]"
+              "set program to [PROGRAM] on channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               PROGRAM: {
@@ -435,7 +435,7 @@
             opcode: "stopChannel",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
-              "stop all sounds on channel [CHANNEL] on synthesizer [SYNTH]"
+              "stop all sounds for channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               NOTE: {
