@@ -2,6 +2,6 @@
 TurboSynth lets you play instruments and percussions.
 
 ## Notes
-TurboSynth uses MIDI bank/program/percussion numbers, see [Wikipedia 1](https://en.wikipedia.org/wiki/General_MIDI#Program_change_events) for "program" numbers, and [Wikipedia 2](https://en.wikipedia.org/wiki/General_MIDI#Percussion) for "drum" numbers.
+TurboSynth uses MIDI bank/program/percussion numbers, see [this PDF](https://sinclairdesign.com/application/files/2615/3528/3835/gm2_sound_list.pdf) for bank/program numbers. For percussion numbers, see [this website](https://www.cs.cmu.edu/~music/cmp/archives/cmsip/readings/GMSpecs_PercMap.htm) (For what this website says, use bank 0. There are more banks for GM2 standard but author could not find one.)
 
-Channel is just a number for grouping notes/percussion sounds, change as you need. (Wikipedia links above this sentence says "channel 10 is reserved for percussion instruments only." but it does not apply here)
+Channel is just a number for grouping notes/percussion sounds, change as you need. (Website for percussion numbers above this sentence says "MIDI Channel 10 is for percussion" but this does not apply to TurboSynth.)

@@ -165,6 +165,7 @@
         id: "nishiowoTurboSynth",
         name: Scratch.translate("TurboSynth"),
         blockIconURI: blockIconURI,
+        docsURI: "https://extensions.nitrobolt.org/NishiOwO/turbosynth",
         color1: "#884400",
         blocks: [
           {
@@ -386,6 +387,33 @@
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
               "play drum [DRUM] for channel [CHANNEL] on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              DRUM: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
+            opcode: "stopDrum",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "stop drum [DRUM] for channel [CHANNEL] on synthesizer [SYNTH]"
             ),
             arguments: {
               DRUM: {
@@ -759,6 +787,14 @@
         GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
         playNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
         GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
+      });
+    }
+
+    stopDrum(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(() => {
+        stopNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
       });
     }
 
