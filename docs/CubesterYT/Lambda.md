@@ -1,6 +1,8 @@
 # Lambda
 This extension allows you to create and execute anonymous functions.
 
+Lambda requires the compiler to be enabled.
+
 ## Creating a Function
 
 Use the Lambda block to create a function from the blocks inside its branch:
