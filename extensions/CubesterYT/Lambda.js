@@ -110,7 +110,11 @@
     }
 
     compileLambda(_, util) {
-      const lambda = util.compileFunction(1, ["lambdaArguments"], '""');
+      const lambda = util.compileFunction(
+        1,
+        ["lambdaArguments", "target", "runtime", "stage"],
+        '""',
+      );
       return `(${lambda})`;
     }
 
@@ -122,7 +126,7 @@
       const lambdaArguments = compileArguments(args);
       return `yield* (function* (lambda) {
         if (typeof lambda !== "function") return;
-        const result = lambda([${lambdaArguments}]);
+        const result = lambda([${lambdaArguments}], target, runtime, stage);
         if (result && typeof result.next === "function") yield* result;
       })(${args.LAMBDA});\n`;
     }
@@ -131,7 +135,7 @@
       const lambdaArguments = compileArguments(args);
       return `(yield* (function* (lambda) {
         if (typeof lambda !== "function") return "";
-        const result = lambda([${lambdaArguments}]);
+        const result = lambda([${lambdaArguments}], target, runtime, stage);
         if (!result || typeof result.next !== "function") return "";
         return yield* result;
       })(${args.LAMBDA}))`;
