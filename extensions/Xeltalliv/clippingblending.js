@@ -219,6 +219,9 @@
   let lastTarget = emptyObject;
   let lastClipbox = {};
   let lastBlendMode = "default";
+  let pendingPrintTarget = null;
+  let activePrintModes = null;
+  const printModes = new WeakMap();
   const resetPenModes = function () {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.disable(gl.SCISSOR_TEST);
@@ -293,6 +296,70 @@
       willDrawPenWithTarget(target);
       penDown.call(this, target);
     };
+
+    // Printed text is rasterized into a temporary Drawable, so it does not naturally
+    // inherit the calling target's clipping box or blend mode like a normal stamp does.
+    const printText = ext_pen._printText;
+    ext_pen._printText = function (text, x, y, target) {
+      pendingPrintTarget = target;
+      try {
+        return printText.call(this, text, x, y, target);
+      } finally {
+        pendingPrintTarget = null;
+      }
+    };
+
+    if (!renderer.penText._clipBlendPatched) {
+      const penText = renderer.penText;
+      renderer.penText = function (penSkinId, text, attributes, x, y) {
+        if (pendingPrintTarget) {
+          printModes.set(attributes, {
+            clipbox: pendingPrintTarget.clipbox
+              ? Object.assign({}, pendingPrintTarget.clipbox)
+              : null,
+            blendMode: pendingPrintTarget.blendMode,
+          });
+        }
+        return penText.call(this, penSkinId, text, attributes, x, y);
+      };
+      renderer.penText._clipBlendPatched = true;
+
+      const drawPenText = renderer._drawPenText;
+      renderer._drawPenText = function (
+        penSkinId,
+        text,
+        attributes,
+        x,
+        y,
+        font
+      ) {
+        activePrintModes = printModes.get(attributes) ?? null;
+        printModes.delete(attributes);
+        try {
+          return drawPenText.call(
+            this,
+            penSkinId,
+            text,
+            attributes,
+            x,
+            y,
+            font
+          );
+        } finally {
+          activePrintModes = null;
+        }
+      };
+
+      const penStamp = renderer.penStamp;
+      renderer.penStamp = function (penSkinId, stampId) {
+        const drawable = this._allDrawables[stampId];
+        if (drawable && activePrintModes) {
+          drawable.clipbox = activePrintModes.clipbox;
+          drawable.blendMode = activePrintModes.blendMode;
+        }
+        return penStamp.call(this, penSkinId, stampId);
+      };
+    }
   };
 
   // Set up correct clipping/blending before drawing on any Pen paper.
