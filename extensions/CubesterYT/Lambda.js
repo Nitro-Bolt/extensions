@@ -14,10 +14,7 @@
   const compileArguments = (args) =>
     Object.keys(args)
       .filter((name) => /^ARGS_\d+_ARG$/.test(name))
-      .sort(
-        (a, b) =>
-          Number(a.slice(5, -4)) - Number(b.slice(5, -4))
-      )
+      .sort((a, b) => Number(a.slice(5, -4)) - Number(b.slice(5, -4)))
       .map((name) => args[name])
       .join(",");
 
@@ -113,7 +110,7 @@
       const lambda = util.compileFunction(
         1,
         ["lambdaArguments", "target", "runtime", "stage"],
-        '""',
+        '""'
       );
       return `(${lambda})`;
     }
