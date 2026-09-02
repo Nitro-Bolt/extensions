@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js": {
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
+      "contentType": "application/javascript; charset=utf-8"
+    },
     "https://raw.githubusercontent.com/Nitro-Bolt/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.js": {
       "sha256": "01d3dc24596fd5024be627952cc1985d954a1d7fdc338423d6a8ae6bba9e519b",
       "contentType": "application/octet-stream"
@@ -7,6 +11,18 @@
     "https://raw.githubusercontent.com/Nitro-Bolt/tw-ode/d580df0057453d3d950c9b65c5672fbe4a160768/odejs.js": {
       "sha256": "73340448fcdb2b9bb0dfc673c72f451c1d4d1ee7286e560cd59b5bce7c5b39b3",
       "contentType": "application/octet-stream"
+    },
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/audioplayer.js": {
+      "sha256": "60d4d800cfdb825c7452f77bfb0ba9d542c20cd0b46041d10bdc6fa956253b9d",
+      "contentType": "text/plain; charset=utf-8"
+    },
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/florestan.zip": {
+      "sha256": "64b9904f39c420bf762113ba6c0f81893a90c2524d814dfad44776f09a3c7981",
+      "contentType": "application/zip"
+    },
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/turbosynthwasm.js": {
+      "sha256": "854bc4d03ee5053d9404e45702406ba033160cfde8d13fb953d718b376118f80",
+      "contentType": "text/plain; charset=utf-8"
     }
   }
 }
