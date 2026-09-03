@@ -4,7 +4,7 @@
 // By: NishiOwO
 // License: BSD-3-Clause
 
-// Repository is at https://github.com/nitro-bolt/tw-libxmp
+// Repository is at https://github.com/NishiOwO/tw-libxmp
 
 (async function (Scratch) {
   "use strict";
@@ -28,12 +28,12 @@
   } else {
     if (full_libxmp) {
       xmp = await Scratch.external.evalAndReturn(
-        "https://raw.githubusercontent.com/Nitro-Bolt/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.js",
+        "https://raw.githubusercontent.com/NishiOwO/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.js",
         "libxmp"
       );
     } else {
       xmp = await Scratch.external.evalAndReturn(
-        "https://raw.githubusercontent.com/Nitro-Bolt/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.full.js",
+        "https://raw.githubusercontent.com/NishiOwO/tw-libxmp/63101e3cfd7281498b5066f4e79fe8fe09b5797f/xmp.full.js",
         "libxmp"
       );
     }

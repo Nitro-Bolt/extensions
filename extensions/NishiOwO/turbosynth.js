@@ -4,6 +4,8 @@
 // By: NishiOwO
 // License: BSD-3-Clause
 
+// Repository is at https://github.com/NishiOwO/tw-turbosynth
+
 (async function (Scratch) {
   "use strict";
 

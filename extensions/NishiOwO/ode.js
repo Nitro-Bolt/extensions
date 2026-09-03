@@ -2,9 +2,9 @@
 // ID: nishiowoOde
 // Description: 3D physics using ODE.
 // By: NishiOwO
-// License: BSD-3-Clause
+// License: MIT or BSD-3-Clause
 
-// Repository is at https://github.com/nitro-bolt/tw-ode
+// Repository is at https://github.com/NishiOwO/tw-ode
 
 (async function (Scratch) {
   "use strict";
@@ -187,7 +187,7 @@
     ode = ODEWASM;
   } else {
     ode = await Scratch.external.evalAndReturn(
-      "https://raw.githubusercontent.com/Nitro-Bolt/tw-ode/d580df0057453d3d950c9b65c5672fbe4a160768/odejs.js",
+      "https://raw.githubusercontent.com/NishiOwO/tw-ode/d580df0057453d3d950c9b65c5672fbe4a160768/odejs.js",
       "ODEWASM"
     );
   }
