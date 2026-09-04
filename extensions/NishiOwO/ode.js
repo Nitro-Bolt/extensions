@@ -1868,6 +1868,8 @@
         geoms: [],
       };
 
+      dBodySetPosition(bodies[key].body, 0, 0, 0);
+
       return key;
     }
 
@@ -2117,6 +2119,8 @@
         geom: dCreateBox(worlds[world].space, sz[0], sz[1], sz[2]),
       };
 
+      dGeomSetPosition(geoms[key].geom, 0, 0, 0);
+
       return key;
     }
 
@@ -2133,6 +2137,8 @@
         world: world,
         geom: dCreateCapsule(worlds[world].space, r, len),
       };
+
+      dGeomSetPosition(geoms[key].geom, 0, 0, 0);
 
       return key;
     }
@@ -2151,6 +2157,8 @@
         geom: dCreateCylinder(worlds[world].space, r, len),
       };
 
+      dGeomSetPosition(geoms[key].geom, 0, 0, 0);
+
       return key;
     }
 
@@ -2166,6 +2174,8 @@
         world: world,
         geom: dCreateSphere(worlds[world].space, r),
       };
+
+      dGeomSetPosition(geoms[key].geom, 0, 0, 0);
 
       return key;
     }
@@ -2223,6 +2233,8 @@
           index.length / 3
         ),
       };
+
+      dGeomSetPosition(geoms[key].geom, 0, 0, 0);
 
       Module._free(i_ptr);
       Module._free(v_ptr);
