@@ -15,17 +15,17 @@
 
   let TurboSynthWASM, Module;
   let FileStream_New, FileStream_Destroy;
-  let GUSPatSynth_New,
-    GUSPatSynth_Note,
-    GUSPatSynth_NoteOffAll,
-    GUSPatSynth_SetBank,
-    GUSPatSynth_SetProgram,
-    GUSPatSynth_SetDrum,
-    GUSPatSynth_ChangePitchWheel,
-    GUSPatSynth_SetVolume,
-    GUSPatSynth_RenderFloat,
-    GUSPatSynth_Reset,
-    GUSPatSynth_Destroy;
+  let WaveSynth_New,
+    WaveSynth_Note,
+    WaveSynth_NoteOffAll,
+    WaveSynth_SetBank,
+    WaveSynth_SetProgram,
+    WaveSynth_SetDrum,
+    WaveSynth_ChangePitchWheel,
+    WaveSynth_SetVolume,
+    WaveSynth_RenderFloat,
+    WaveSynth_Reset,
+    WaveSynth_Destroy;
   let JZZip, AudioPlayer;
   let florestanZip;
 
@@ -35,7 +35,7 @@
     Scratch.ArgumentType[Scratch.extensions.isNitroBolt ? "SLIDER" : "NUMBER"];
 
   TurboSynthWASM = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/turbosynthwasm.js",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
     "TurboSynthWASM"
   );
   Module = await TurboSynthWASM();
@@ -46,65 +46,65 @@
   ]);
   FileStream_Destroy = Module.cwrap("FileStream_Destroy", null, ["number"]);
 
-  GUSPatSynth_New = Module.cwrap("GUSPatSynth_New", "number", [
+  WaveSynth_New = Module.cwrap("WaveSynth_New", "number", [
     "number",
     "number",
   ]);
-  GUSPatSynth_Note = Module.cwrap("GUSPatSynth_Note", null, [
-    "number",
-    "number",
-    "number",
-    "number",
-  ]);
-  GUSPatSynth_NoteOffAll = Module.cwrap("GUSPatSynth_NoteOffAll", null, [
-    "number",
-    "number",
-  ]);
-  GUSPatSynth_SetBank = Module.cwrap("GUSPatSynth_SetBank", null, [
-    "number",
-    "number",
-    "number",
-  ]);
-  GUSPatSynth_SetProgram = Module.cwrap("GUSPatSynth_SetProgram", null, [
+  WaveSynth_Note = Module.cwrap("WaveSynth_Note", null, [
     "number",
     "number",
     "number",
     "number",
   ]);
-  GUSPatSynth_SetDrum = Module.cwrap("GUSPatSynth_SetDrum", null, [
+  WaveSynth_NoteOffAll = Module.cwrap("WaveSynth_NoteOffAll", null, [
+    "number",
+    "number",
+  ]);
+  WaveSynth_SetBank = Module.cwrap("WaveSynth_SetBank", null, [
     "number",
     "number",
     "number",
   ]);
-  GUSPatSynth_ChangePitchWheel = Module.cwrap(
-    "GUSPatSynth_ChangePitchWheel",
+  WaveSynth_SetProgram = Module.cwrap("WaveSynth_SetProgram", null, [
+    "number",
+    "number",
+    "number",
+    "number",
+  ]);
+  WaveSynth_SetDrum = Module.cwrap("WaveSynth_SetDrum", null, [
+    "number",
+    "number",
+    "number",
+  ]);
+  WaveSynth_ChangePitchWheel = Module.cwrap(
+    "WaveSynth_ChangePitchWheel",
     null,
     ["number", "number", "number"]
   );
-  GUSPatSynth_SetVolume = Module.cwrap("GUSPatSynth_SetVolume", null, [
+  WaveSynth_SetVolume = Module.cwrap("WaveSynth_SetVolume", null, [
     "number",
     "number",
     "number",
   ]);
-  GUSPatSynth_RenderFloat = Module.cwrap("GUSPatSynth_RenderFloat", null, [
+  WaveSynth_RenderFloat = Module.cwrap("WaveSynth_RenderFloat", null, [
     "number",
     "number",
     "number",
   ]);
-  GUSPatSynth_Reset = Module.cwrap("GUSPatSynth_Reset", null, ["number"]);
-  GUSPatSynth_Destroy = Module.cwrap("GUSPatSynth_Destroy", null, ["number"]);
+  WaveSynth_Reset = Module.cwrap("WaveSynth_Reset", null, ["number"]);
+  WaveSynth_Destroy = Module.cwrap("WaveSynth_Destroy", null, ["number"]);
 
   JZZip = await Scratch.external.evalAndReturn(
     "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js",
     "JSZip"
   );
   AudioPlayer = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/audioplayer.js",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/audioplayer.js",
     "AudioPlayer"
   );
 
   florestanZip = await Scratch.external.dataURL(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/florestan.zip"
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/florestan.zip"
   );
 
   function newSynthId() {
@@ -142,7 +142,7 @@
   }
 
   function playNote(synth, channel, note, velocity = 127) {
-    GUSPatSynth_Note(synth, channel, note, velocity);
+    WaveSynth_Note(synth, channel, note, velocity);
   }
 
   function stopNote(synth, channel, note) {
@@ -616,7 +616,7 @@
             return "";
           }
 
-          if ((synth[id].synth = GUSPatSynth_New(fs, 44100)) == 0) {
+          if ((synth[id].synth = WaveSynth_New(fs, 44100)) == 0) {
             FileStream_Destroy(fs);
             destroySynthId(id);
 
@@ -643,7 +643,7 @@
           const lChannelData = audioBuffer.getChannelData(0);
           const rChannelData = audioBuffer.getChannelData(1);
 
-          GUSPatSynth_RenderFloat(synth[id].synth, synth[id].bufferPtr, frames);
+          WaveSynth_RenderFloat(synth[id].synth, synth[id].bufferPtr, frames);
 
           for (let i = 0; i < frames; i++) {
             lChannelData[i] = synth[id].buffer[2 * i + 0];
@@ -666,7 +666,7 @@
         await new Promise((res, rej) => {
           synth[args.SYNTH].audioPlayer.onended = () => {
             Module._free(synth[args.SYNTH].bufferPtr);
-            GUSPatSynth_Destroy(synth[args.SYNTH].synth);
+            WaveSynth_Destroy(synth[args.SYNTH].synth);
             destroySynthId(args.SYNTH);
 
             res();
@@ -681,7 +681,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_Reset(synth[args.SYNTH].synth);
+        WaveSynth_Reset(synth[args.SYNTH].synth);
       });
     }
 
@@ -748,7 +748,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_SetBank(synth[args.SYNTH].synth, args.CHANNEL, args.BANK);
+        WaveSynth_SetBank(synth[args.SYNTH].synth, args.CHANNEL, args.BANK);
       });
     }
 
@@ -756,7 +756,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_SetProgram(
+        WaveSynth_SetProgram(
           synth[args.SYNTH].synth,
           args.CHANNEL,
           args.PROGRAM,
@@ -769,13 +769,13 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(async () => {
-        GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
         playNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
 
         await after(
           () => {
             stopNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
-            GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
+            WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
           },
           beatsToMs(synth[args.SYNTH], args.BEATS)
         );
@@ -786,9 +786,9 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
         playNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
-        GUSPatSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
       });
     }
 
@@ -804,7 +804,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_ChangePitchWheel(
+        WaveSynth_ChangePitchWheel(
           synth[args.SYNTH].synth,
           args.CHANNEL,
           args.SEMITONE
@@ -816,7 +816,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_SetVolume(
+        WaveSynth_SetVolume(
           synth[args.SYNTH].synth,
           args.CHANNEL,
           args.VOLUME / 100
@@ -828,7 +828,7 @@
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
-        GUSPatSynth_NoteOffAll(synth[args.SYNTH].synth, args.CHANNEL);
+        WaveSynth_NoteOffAll(synth[args.SYNTH].synth, args.CHANNEL);
       });
     }
   }
