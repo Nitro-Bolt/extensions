@@ -13,7 +13,8 @@
     throw new Error("TurboSynth must be run unsandboxed");
   }
 
-  let TurboSynthWASM, Module;
+  let embedded = false;
+  let TurboSynth, TurboSynthWASM, Module;
   let FileStream_New, FileStream_Destroy;
   let WaveSynth_New,
     WaveSynth_Note,
@@ -34,11 +35,19 @@
   const argSlider =
     Scratch.ArgumentType[Scratch.extensions.isNitroBolt ? "SLIDER" : "NUMBER"];
 
-  TurboSynthWASM = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
-    "TurboSynthWASM"
-  );
-  Module = await TurboSynthWASM();
+  /* DO NOT REMOVE THE COMMENT BELOW!!! */
+  /* EMBED TURBOSYNTHWASM.JS HERE */
+
+  if (embedded) {
+    TurboSynth = TurboSynthWASM;
+  } else {
+    TurboSynth = await Scratch.external.evalAndReturn(
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
+      "TurboSynthWASM"
+    );
+  }
+
+  Module = await TurboSynth();
 
   FileStream_New = Module.cwrap("FileStream_New", "number", [
     "string",
@@ -46,10 +55,7 @@
   ]);
   FileStream_Destroy = Module.cwrap("FileStream_Destroy", null, ["number"]);
 
-  WaveSynth_New = Module.cwrap("WaveSynth_New", "number", [
-    "number",
-    "number",
-  ]);
+  WaveSynth_New = Module.cwrap("WaveSynth_New", "number", ["number", "number"]);
   WaveSynth_Note = Module.cwrap("WaveSynth_Note", null, [
     "number",
     "number",
