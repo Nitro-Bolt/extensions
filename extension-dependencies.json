@@ -12,16 +12,16 @@
       "sha256": "c234c65d9f13c93a7a69ba1e1b613a6e0a5ac9f84f50a68c0bdf962cd5ad2afb",
       "contentType": "text/plain; charset=utf-8"
     },
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/audioplayer.js": {
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/audioplayer.js": {
       "sha256": "60d4d800cfdb825c7452f77bfb0ba9d542c20cd0b46041d10bdc6fa956253b9d",
       "contentType": "text/plain; charset=utf-8"
     },
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/florestan.zip": {
-      "sha256": "64b9904f39c420bf762113ba6c0f81893a90c2524d814dfad44776f09a3c7981",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/florestan.zip": {
+      "sha256": "7cacde3cbee89557bc4dfab9ebb68364dc6d493acf29fc94361f5fbf37466be8",
       "contentType": "application/zip"
     },
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/11430b2f9374cb68c6449d394554b91e2bc71c72/web/turbosynthwasm.js": {
-      "sha256": "854bc4d03ee5053d9404e45702406ba033160cfde8d13fb953d718b376118f80",
+    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js": {
+      "sha256": "2a284e10051642fc3c2ae790f92dd77bf888371aeb688d62804612b0d1986da2",
       "contentType": "text/plain; charset=utf-8"
     }
   }
