@@ -1,9 +1,8 @@
-// Name: Tween+
+// Name: Tween
 // ID: jeremygamerTweening
 // Description: Easing methods for smooth animations.
 // By: JeremyGamer13 <https://scratch.mit.edu/users/JeremyGamer13/>
 // By: Fath11 <https://scratch.mit.edu/users/Fath11/>
-// By: ddededodediamante <https://github.com/ddededodediamante/>
 // License: MIT
 
 // Version V.1.0.0
@@ -245,11 +244,11 @@
 
   const ddeSymbol = Symbol("ddeTweeningPlus");
 
-  class TweeningPlus {
+  class ddeTweening {
     getInfo() {
       return {
         id: "jeremygamerTweening",
-        name: Scratch.translate("Tweening+"),
+        name: Scratch.translate("Tweening"),
         blocks: [
           {
             opcode: "tweenValue",
@@ -673,10 +672,9 @@
     tweenBranchTimeElapsed(_args, util) {
       const state = util.thread[ddeSymbol];
       if (!state) return 0;
-
       return state.timer.timeElapsed();
     }
   }
 
-  Scratch.extensions.register(new TweeningPlus());
+  Scratch.extensions.register(new ddeTweening());
 })(Scratch);
