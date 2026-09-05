@@ -13,7 +13,8 @@
     throw new Error("TurboSynth must be run unsandboxed");
   }
 
-  let TurboSynthWASM, Module;
+  let embedded = false;
+  let Module;
   let FileStream_New, FileStream_Destroy;
   let WaveSynth_New,
     WaveSynth_Note,
@@ -26,7 +27,7 @@
     WaveSynth_RenderFloat,
     WaveSynth_Reset,
     WaveSynth_Destroy;
-  let JZZip, AudioPlayer;
+  let loaded = { TurboSynthWASM: null, JZZip: null, AudioPlayer: null };
   let florestanZip;
 
   let synth = {};
@@ -34,11 +35,19 @@
   const argSlider =
     Scratch.ArgumentType[Scratch.extensions.isNitroBolt ? "SLIDER" : "NUMBER"];
 
-  TurboSynthWASM = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
-    "TurboSynthWASM"
-  );
-  Module = await TurboSynthWASM();
+  /* DO NOT REMOVE THE COMMENT BELOW!!! */
+  /* EMBED TURBOSYNTHWASM.JS HERE */
+
+  if (embedded) {
+    loaded.TurboSynthWASM = TurboSynthWASM; // eslint-disable-line
+  } else {
+    loaded.TurboSynthWASM = await Scratch.external.evalAndReturn(
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
+      "TurboSynthWASM"
+    );
+  }
+
+  Module = await loaded.TurboSynthWASM();
 
   FileStream_New = Module.cwrap("FileStream_New", "number", [
     "string",
@@ -46,10 +55,7 @@
   ]);
   FileStream_Destroy = Module.cwrap("FileStream_Destroy", null, ["number"]);
 
-  WaveSynth_New = Module.cwrap("WaveSynth_New", "number", [
-    "number",
-    "number",
-  ]);
+  WaveSynth_New = Module.cwrap("WaveSynth_New", "number", ["number", "number"]);
   WaveSynth_Note = Module.cwrap("WaveSynth_Note", null, [
     "number",
     "number",
@@ -94,18 +100,38 @@
   WaveSynth_Reset = Module.cwrap("WaveSynth_Reset", null, ["number"]);
   WaveSynth_Destroy = Module.cwrap("WaveSynth_Destroy", null, ["number"]);
 
-  JZZip = await Scratch.external.evalAndReturn(
-    "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js",
-    "JSZip"
-  );
-  AudioPlayer = await Scratch.external.evalAndReturn(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/audioplayer.js",
-    "AudioPlayer"
-  );
+  /* DO NOT REMOVE THE COMMENT BELOW!!! */
+  /* EMBED JSZIP.MIN.JS HERE */
 
-  florestanZip = await Scratch.external.dataURL(
-    "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/florestan.zip"
-  );
+  if (embedded) {
+    loaded.JSZip = JSZip; // eslint-disable-line
+  } else {
+    loaded.JSZip = await Scratch.external.evalAndReturn(
+      "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js",
+      "JSZip"
+    );
+  }
+
+  /* DO NOT REMOVE THE COMMENT BELOW!!! */
+  /* EMBED AUDIOPLAYER.JS HERE */
+
+  if (embedded) {
+    loaded.AudioPlayer = AudioPlayer; // eslint-disable-line
+  } else {
+    loaded.AudioPlayer = await Scratch.external.evalAndReturn(
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/audioplayer.js",
+      "AudioPlayer"
+    );
+  }
+
+  /* DO NOT REMOVE THE COMMENT BELOW!!! */
+  /* EMBED FLORESTAN.ZIP HERE */
+
+  if (!embedded) {
+    florestanZip = await Scratch.external.dataURL(
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/florestan.zip"
+    );
+  }
 
   function newSynthId() {
     let id;
@@ -123,7 +149,7 @@
     delete synth[id];
   }
 
-  async function fileOpSynthId(id, callback) {
+  function fileOpSynthId(id, callback) {
     return navigator.locks.request("turboSynthFS", async (lock) => {
       Module.FS.mkdir(`/${id}`);
       Module.FS.mount(Module.FS.filesystems.MEMFS, {}, `/${id}`);
@@ -590,7 +616,7 @@
       synth[id].promise = (async () => {
         try {
           const res = await Scratch.fetch(args.PATCHES);
-          zip = await JSZip.loadAsync(await res.arrayBuffer());
+          zip = await loaded.JSZip.loadAsync(await res.arrayBuffer());
           cfgs = Object.keys(zip.files).filter((x) =>
             x.toLowerCase().endsWith(".cfg")
           );
@@ -626,7 +652,7 @@
           FileStream_Destroy(fs);
         });
 
-        synth[id].audioPlayer = new AudioPlayer(
+        synth[id].audioPlayer = new loaded.AudioPlayer(
           Scratch.vm.runtime.audioEngine.audioContext,
           44100
         );
