@@ -658,6 +658,7 @@
       if (!endCurrent && !util.stackTimerFinished()) {
         util.startBranch(1, true);
       } else if (endCurrent) {
+        util.startBranch(1, false);
         util.thread[ddeSymbol].endCurrent = false;
         delete util.stackFrame.timer;
         delete util.stackFrame.duration;
