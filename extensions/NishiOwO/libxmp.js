@@ -18,13 +18,12 @@
   let g_keepplaying = {};
   let embedded = false;
   let full_libxmp = false;
-  var libxmp;
 
   /* DO NOT REMOVE THE COMMENT BELOW!!! */
   /* EMBED XMP.JS HERE */
 
   if (embedded) {
-    xmp = libxmp;
+    xmp = libxmp; // eslint-disable-line
   } else {
     if (full_libxmp) {
       xmp = await Scratch.external.evalAndReturn(

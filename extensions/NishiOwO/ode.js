@@ -154,7 +154,6 @@
     dJointAddPUTorques;
   let ode;
   let embedded = false;
-  var ODEWASM;
   let worlds = {};
   let geoms = {};
   let bodies = {};
@@ -204,7 +203,7 @@
   /* EMBED ODEJS.JS HERE */
 
   if (embedded) {
-    ode = ODEWASM;
+    ode = ODEWASM; // eslint-disable-line
   } else {
     ode = await Scratch.external.evalAndReturn(
       "https://raw.githubusercontent.com/NishiOwO/tw-ode/e5f54b5e05ae363e937740af0c81b217e06c15e8/odejs.js",
