@@ -18,6 +18,7 @@
   let g_keepplaying = {};
   let embedded = false;
   let full_libxmp = false;
+  let volume = 100;
 
   /* DO NOT REMOVE THE COMMENT BELOW!!! */
   /* EMBED XMP.JS HERE */
@@ -81,6 +82,17 @@
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("stop all playing"),
           },
+          {
+            opcode: "setVolume",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set volume to [VOLUME]%"),
+            arguments: {
+              VOLUME: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 100,
+              },
+            },
+          },
         ],
       };
     }
@@ -124,8 +136,8 @@
 
               if (keep_playing()) {
                 for (let i = 0; i < len; i++) {
-                  lChannelData[i] = buffer[2 * i + 0 + 1];
-                  rChannelData[i] = buffer[2 * i + 1 + 1];
+                  lChannelData[i] = buffer[2 * i + 0 + 1] * (volume / 100);
+                  rChannelData[i] = buffer[2 * i + 1 + 1] * (volume / 100);
                 }
               } else {
                 for (let i = 0; i < len; i++) {
@@ -170,6 +182,13 @@
 
     stopAll() {
       g_keepplaying = {};
+    }
+
+    setVolume(args) {
+      if (args.VOLUME > 100) args.VOLUME = 100;
+      if (args.VOLUME < 0) args.VOLUME = 0;
+
+      volume = args.VOLUME;
     }
   }
 
