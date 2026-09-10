@@ -14,7 +14,7 @@
 
 //if you are looking for extension settings search up /* EXTENSION SETTINGS */
 
-//7.1.9-NB patch notes
+//7.1.10-NB patch notes
 
 /*
   ? -- Changes -- ?
@@ -65,28 +65,42 @@
   //?Neato uniform for universally transforming triangles to fit the screen
   let transform_Matrix = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+  const updateCanvasSize = () => {
+    nativeSize = renderer.useHighQualityRender
+      ? [canvas.width, canvas.height]
+      : renderer._nativeSize;
+
+    transform_Matrix[0] = 2 / renderer._nativeSize[0];
+    transform_Matrix[1] = -2 / renderer._nativeSize[1];
+    const previousFramebuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+    const previousClearColor = gl.getParameter(gl.COLOR_CLEAR_VALUE);
+    const previousClearDepth = gl.getParameter(gl.DEPTH_CLEAR_VALUE);
+    const previousDepthMask = gl.getParameter(gl.DEPTH_WRITEMASK);
+    twgl.resizeFramebufferInfo(
+      gl,
+      triBufferInfo,
+      triBufferAttachments,
+      Scratch.Cast.toNumber(nativeSize[0]),
+      Scratch.Cast.toNumber(nativeSize[1])
+    );
+
+    // Newly allocated framebuffer attachments have undefined contents. In particular,
+    // uncleared depth values can reject arbitrary triangles when Pen+ loads with a project.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, triBufferInfo.framebuffer);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clearDepth(1);
+    gl.depthMask(true);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clearColor(...previousClearColor);
+    gl.clearDepth(previousClearDepth);
+    gl.depthMask(previousDepthMask);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, previousFramebuffer);
+  };
+
   //?Buffer handling and pen loading
   {
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
-
-    const updateCanvasSize = () => {
-      nativeSize = renderer.useHighQualityRender
-        ? [canvas.width, canvas.height]
-        : renderer._nativeSize;
-
-      transform_Matrix[0] = 2 / renderer._nativeSize[0];
-      transform_Matrix[1] = -2 / renderer._nativeSize[1];
-      let lastFB = gl.getParameter(gl.FRAMEBUFFER_BINDING);
-      twgl.resizeFramebufferInfo(
-        gl,
-        triBufferInfo,
-        triBufferAttachments,
-        Scratch.Cast.toNumber(nativeSize[0]),
-        Scratch.Cast.toNumber(nativeSize[1])
-      );
-      gl.bindFramebuffer(gl.FRAMEBUFFER, lastFB);
-    };
 
     //?Call it to have it consistant
     updateCanvasSize();
@@ -1074,7 +1088,12 @@
       //Others are allowed to join!
       vm.runtime.ext_obviousalexc_penPlus = this;
 
-      vm.runtime.on("PROJECT_LOADED", this._setupExtensionStorage);
+      vm.runtime.on("PROJECT_LOADED", () => {
+        this._setupExtensionStorage();
+        updateCanvasSize();
+        this.currentRenderTexture = triBufferInfo;
+        this.inDrawRegion = false;
+      });
 
       //Remove clone data from cache;
       vm.runtime.on("targetWasRemoved", (clone) => {
