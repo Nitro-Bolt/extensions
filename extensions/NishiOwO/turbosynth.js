@@ -175,6 +175,10 @@
     playNote(synth, channel, note, 0);
   }
 
+  function twVelToMidiVel(vel) {
+    return (Math.min(Math.max(vel, 0), 100) / 100) * 127;
+  }
+
   function after(callback, ms) {
     return new Promise((res, rej) => {
       setTimeout(async () => {
@@ -328,6 +332,41 @@
             },
           },
           {
+            opcode: "playNoteVelocity",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "play note [NOTE] for channel [CHANNEL] with velocity [VELOCITY]% for [BEATS] beats on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              NOTE: {
+                type: Scratch.ArgumentType.NOTE,
+                defaultValue: 60,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              VELOCITY: {
+                type: argSlider,
+                defaultValue: 100,
+                min: 0,
+                max: 100,
+                precision: 1,
+              },
+              BEATS: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0.25,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
             opcode: "playNoteAsync",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
@@ -343,6 +382,37 @@
                 defaultValue: 0,
                 min: 0,
                 max: 127,
+                precision: 1,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
+            opcode: "playNoteVelocityAsync",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "play note [NOTE] for channel [CHANNEL] with velocity [VELOCITY]% on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              NOTE: {
+                type: Scratch.ArgumentType.NOTE,
+                defaultValue: 60,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              VELOCITY: {
+                type: argSlider,
+                defaultValue: 100,
+                min: 0,
+                max: 100,
                 precision: 1,
               },
               SYNTH: {
@@ -411,6 +481,44 @@
             },
           },
           {
+            opcode: "playDrumVelocity",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "play drum [DRUM] for channel [CHANNEL] with velocity [VELOCITY] for [BEATS] beats on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              DRUM: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              VELOCITY: {
+                type: argSlider,
+                defaultValue: 100,
+                min: 0,
+                max: 100,
+                precision: 1,
+              },
+              BEATS: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: 0.25,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
             opcode: "playDrumAsync",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate(
@@ -429,6 +537,40 @@
                 defaultValue: 0,
                 min: 0,
                 max: 127,
+                precision: 1,
+              },
+              SYNTH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+            },
+          },
+          {
+            opcode: "playDrumVelocityAsync",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "play drum [DRUM] for channel [CHANNEL] with velocity [VELOCITY]% on synthesizer [SYNTH]"
+            ),
+            arguments: {
+              DRUM: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              CHANNEL: {
+                type: argSlider,
+                defaultValue: 0,
+                min: 0,
+                max: 127,
+                precision: 1,
+              },
+              VELOCITY: {
+                type: argSlider,
+                defaultValue: 100,
+                min: 0,
+                max: 100,
                 precision: 1,
               },
               SYNTH: {
@@ -754,11 +896,44 @@
       });
     }
 
+    playNoteVelocity(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(async () => {
+        playNote(
+          synth[args.SYNTH].synth,
+          args.CHANNEL,
+          args.NOTE,
+          twVelToMidiVel(args.VELOCITY)
+        );
+
+        await after(
+          () => {
+            stopNote(synth[args.SYNTH].synth, args.CHANNEL, args.NOTE);
+          },
+          beatsToMs(synth[args.SYNTH], args.BEATS)
+        );
+      });
+    }
+
     playNoteAsync(args) {
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
         playNote(synth[args.SYNTH].synth, args.CHANNEL, args.NOTE);
+      });
+    }
+
+    playNoteVelocityAsync(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(() => {
+        playNote(
+          synth[args.SYNTH].synth,
+          args.CHANNEL,
+          args.NOTE,
+          twVelToMidiVel(args.VELOCITY)
+        );
       });
     }
 
@@ -808,12 +983,49 @@
       });
     }
 
+    playDrumVelocity(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(async () => {
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
+        playNote(
+          synth[args.SYNTH].synth,
+          args.CHANNEL,
+          args.DRUM,
+          twVelToMidiVel(args.VELOCITY)
+        );
+
+        await after(
+          () => {
+            stopNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
+            WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
+          },
+          beatsToMs(synth[args.SYNTH], args.BEATS)
+        );
+      });
+    }
+
     playDrumAsync(args) {
       if (!synth[args.SYNTH]) return;
 
       return synth[args.SYNTH].promise.then(() => {
         WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
         playNote(synth[args.SYNTH].synth, args.CHANNEL, args.DRUM);
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
+      });
+    }
+
+    playDrumVelocityAsync(args) {
+      if (!synth[args.SYNTH]) return;
+
+      return synth[args.SYNTH].promise.then(() => {
+        WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 1);
+        playNote(
+          synth[args.SYNTH].synth,
+          args.CHANNEL,
+          args.DRUM,
+          twVelToMidiVel(args.VELOCITY)
+        );
         WaveSynth_SetDrum(synth[args.SYNTH].synth, args.CHANNEL, 0);
       });
     }
