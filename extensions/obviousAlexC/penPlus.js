@@ -697,13 +697,7 @@
       enter: () => {
         if (this.culling) {
           gl.enable(gl.CULL_FACE);
-          gl.cullFace(this.cullMode);
-        } else {
-          gl.disable(gl.CULL_FACE);
         }
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);
-        gl.depthMask(true);
         this.trianglesDrawn = 0;
         this.inDrawRegion = true;
         if (this.currentRenderTexture != triBufferInfo) {
@@ -1080,7 +1074,10 @@
       //Others are allowed to join!
       vm.runtime.ext_obviousalexc_penPlus = this;
 
-      vm.runtime.on("PROJECT_LOADED", this._setupExtensionStorage);
+      vm.runtime.on("PROJECT_LOADED", () => {
+        this._setupExtensionStorage();
+        runtime.ext_pen._getPenLayerID();
+      });
 
       //Remove clone data from cache;
       vm.runtime.on("targetWasRemoved", (clone) => {
@@ -1095,6 +1092,9 @@
       });
 
       this._setupExtensionStorage();
+      if (runtime.targets.length > 0) {
+        runtime.ext_pen._getPenLayerID();
+      }
 
       this._setupTheme();
     }
@@ -1301,7 +1301,6 @@
 
     //Stolen from lily :3
     _setupExtensionStorage() {
-      runtime.ext_pen._getPenLayerID();
       //Penguinmod saving support
       if (Scratch.extensions.isPenguinMod) {
         parentExtension.serialize = () => {
