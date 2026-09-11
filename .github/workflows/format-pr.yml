@@ -7,7 +7,7 @@ on:
 permissions: {}
 
 jobs:
-  # This is complicated because the action runs in the context of TurboWarp/extensions, but we
+  # This is complicated because the action runs in the context of Nitro-Bolt/extensions, but we
   # are processing content from a possibly malicious pull request. To keep this safe, we break
   # this into two stages.
 
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout upstream
         uses: actions/checkout@v7
         with:
-          repository: TurboWarp/extensions
+          repository: Nitro-Bolt/extensions
           persist-credentials: false
       - name: Checkout pull request
         run: gh pr checkout "$PR_NUM"
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout upstream
         uses: actions/checkout@v7
         with:
-          repository: TurboWarp/extensions
+          repository: Nitro-Bolt/extensions
           # Can't use the default workflow token because commits made by it won't cause more
           # workflows to run, so any commits it pushes get stuck in limbo waiting for workflows
           # to run that will never run.
@@ -106,10 +106,10 @@ jobs:
           git config --global user.name "$GITHUB_ACTOR"
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git stage .
-          git commit --author "DangoCat[bot] <dangocat@users.noreply.github.com>" -m "[Automated] Format code" || commit_failed
+          git commit --author "NitroCanister[bot] <nitrocanister@users.noreply.github.com>" -m "[Automated] Format code" || commit_failed
 
           # Explicitly set push.default to upstream, otherwise by default git might complain about us being on a
-          # branch called "DangoCat/master" but the corresponding branch on remote "DangoCat" is just "master".
+          # branch called "NitroCanister/master" but the corresponding branch on remote "NitroCanister" is just "master".
           git config --global push.default upstream
           git push || push_failed
         env:
