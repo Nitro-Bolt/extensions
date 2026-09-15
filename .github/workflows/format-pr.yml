@@ -72,7 +72,7 @@ jobs:
           # request is coming from.
           # Thus we use a manually created fine-grained personal access token from a real
           # GitHub account with write permissions for this repository.
-          token: "${{ secrets.FORMAT_PR_GH_TOKEN }}"
+          token: "${{ secrets.AUTOMATION }}"
           # Credentials are needed for pushing changes at the end.
           # This is already the default, but we'll be explicit about this.
           persist-credentials: true
