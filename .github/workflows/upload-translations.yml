@@ -31,7 +31,7 @@ jobs:
       - name: Upload translations
         run: pnpm run upload-translations
         env:
-          TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX_TOKEN }}"
+          TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX }}"
           TRANSIFEX_ORGANIZATION: "turbowarp"
           TRANSIFEX_PROJECT: "turbowarp"
           TRANSIFEX_RUNTIME_RESOURCE: "extensions"
