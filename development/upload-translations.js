@@ -7,6 +7,53 @@ import {
 } from "./transifex-common.js";
 import Builder from "./builder.js";
 
+const getResourceId = (resource) =>
+  `o:${ORGANIZATION_NAME}:p:${PROJECT_NAME}:r:${resource}`;
+
+const uploadStrings = async (resource, strings) => {
+  const upload = () =>
+    transifexApi.ResourceStringsAsyncUpload.upload({
+      resource: {
+        data: {
+          id: getResourceId(resource),
+          type: "resources",
+        },
+      },
+      content: JSON.stringify(strings),
+    });
+
+  try {
+    await upload();
+  } catch (error) {
+    const status =
+      error.statusCode ?? error.response?.statusCode ?? error.response?.status;
+    if (status !== 404) throw error;
+
+    console.log(`Resource ${resource} does not exist. Creating it...`);
+    await transifexApi.Resource.create({
+      attributes: {
+        slug: resource,
+        name: resource,
+      },
+      relationships: {
+        i18n_format: {
+          data: {
+            id: "STRUCTURED_JSON",
+            type: "i18n_formats",
+          },
+        },
+        project: {
+          data: {
+            id: `o:${ORGANIZATION_NAME}:p:${PROJECT_NAME}`,
+            type: "projects",
+          },
+        },
+      },
+    });
+    await upload();
+  }
+};
+
 const uploadRuntimeStrings = async (strings) => {
   if (
     strings["lab/text@_Animated Text"].string !== "Animated Text" ||
@@ -17,15 +64,7 @@ const uploadRuntimeStrings = async (strings) => {
     throw new Error("Sanity check failed.");
   }
 
-  await transifexApi.ResourceStringsAsyncUpload.upload({
-    resource: {
-      data: {
-        id: `o:${ORGANIZATION_NAME}:p:${PROJECT_NAME}:r:${RUNTIME_RESOURCE}`,
-        type: "resources",
-      },
-    },
-    content: JSON.stringify(strings),
-  });
+  await uploadStrings(RUNTIME_RESOURCE, strings);
 };
 
 const uploadMetadataStrings = async (strings) => {
@@ -38,15 +77,7 @@ const uploadMetadataStrings = async (strings) => {
     throw new Error("Sanity check failed.");
   }
 
-  await transifexApi.ResourceStringsAsyncUpload.upload({
-    resource: {
-      data: {
-        id: `o:${ORGANIZATION_NAME}:p:${PROJECT_NAME}:r:${METADATA_RESOURCE}`,
-        type: "resources",
-      },
-    },
-    content: JSON.stringify(strings),
-  });
+  await uploadStrings(METADATA_RESOURCE, strings);
 };
 
 const run = async () => {
