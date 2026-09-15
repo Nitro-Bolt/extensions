@@ -1,4 +1,4 @@
-name: Download translations
+name: Sync translations
 
 on:
   workflow_dispatch:
@@ -7,33 +7,25 @@ on:
     - cron: "44 10 * * WED,SAT"
 
 concurrency:
-  group: "download-translations"
-  cancel-in-progress: true
+  group: "sync-translations"
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
-  download-translations:
+  sync-translations:
     runs-on: ubuntu-latest
 
-    # This workflow is not useful to forks without setting up Transifex and modifying the
-    # workflow to use your organization, project, resources, API token, ...
-    if: ${{ github.repository == 'TurboWarp/extensions' && github.ref == 'refs/heads/master' }}
+    if: ${{ github.repository == 'Nitro-Bolt/extensions' && github.ref == 'refs/heads/master' }}
 
     steps:
-      - name: Checkout fork
+      - name: Checkout
         uses: actions/checkout@v7
         with:
-          # Commits will be written to this fork, then pull requested to the main repository.
-          repository: "DangoCat/extensions"
-          token: "${{ secrets.UPDATE_TRANSLATIONS_FORK_GH_TOKEN }}"
-          # We will push later so the token has to be stored.
+          ref: master
+          token: "${{ secrets.AUTOMATION }}"
           persist-credentials: true
-      - name: Checkout upstream
-        run: |
-          git remote add upstream "https://github.com/$UPSTREAM_REPO.git"
-          git fetch upstream
-          git checkout upstream/master
-        env:
-          UPSTREAM_REPO: "TurboWarp/extensions"
       - name: Install pnpm
         uses: pnpm/action-setup@v4
       - name: Install Node.js
@@ -42,66 +34,31 @@ jobs:
           node-version: 24
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Upload source strings
+        run: pnpm run upload-translations
+        env:
+          TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX }}"
+          TRANSIFEX_ORGANIZATION: "nitrobolt"
+          TRANSIFEX_PROJECT: "nitrobolt"
+          TRANSIFEX_RUNTIME_RESOURCE: "extension-runtime"
+          TRANSIFEX_METADATA_RESOURCE: "extension-metadata"
       - name: Download translations
         run: pnpm run download-translations
         env:
           TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX }}"
-          TRANSIFEX_ORGANIZATION: "turbowarp"
-          TRANSIFEX_PROJECT: "turbowarp"
-          TRANSIFEX_RUNTIME_RESOURCE: "extensions"
+          TRANSIFEX_ORGANIZATION: "nitrobolt"
+          TRANSIFEX_PROJECT: "nitrobolt"
+          TRANSIFEX_RUNTIME_RESOURCE: "extension-runtime"
           TRANSIFEX_METADATA_RESOURCE: "extension-metadata"
-      - name: Delete old branches, commit, push, pull request
+      - name: Commit and push updates
         run: |
-          if [[ ! $(git status --porcelain) ]]; then
-            echo "No changes"
+          if [[ ! $(git status --porcelain -- translations/extension-runtime.json translations/extension-metadata.json download-warnings.txt) ]]; then
+            echo "No translation updates."
             exit 0
           fi
-
-          # Remove old branches, which also closes the pull requests
-          all_branches=$(GH_TOKEN="$FORK_GH_TOKEN" gh api "repos/$FORK_REPO/branches" --paginate | jq -r '.[].name')
-          for branch in $all_branches; do
-            if [[ $branch == update-translations-* ]]; then
-              echo "Deleting branch: $branch"
-              git push -d origin "$branch"
-            else
-              echo "Keeping branch: $branch"
-            fi
-          done
-
-          # Create new branch
-          new_branch="update-translations-$(date -u +%Y%m%d%H%M%S)"
-          git checkout -b "$new_branch"
-
-          # Commit
-          date="$(date -u "+%Y-%m-%d")"
-          title="[Automated] Update translations $date"
-          warnings="$(cat download-warnings.txt)"
-          git add .
-          git config --global user.name "DangoCat[bot]"
-          git config --global user.email "dangocat@users.noreply.github.com"
-          if [ -n "$warnings" ]; then
-            git commit -m "$title" -m "$warnings"
-          else
-            git commit -m "$title"
-          fi
-
-          # Push
-          git push origin "$new_branch"
-
-          # Create pull request
-          body="This pull request was made by a robot."
-          if [ -n "$warnings" ]; then
-            body="$body"$'\n\n'"$warnings"
-          fi
-          GH_TOKEN="$UPSTREAM_GH_TOKEN" gh pr create \
-            --head "dangocat:$new_branch" \
-            --repo "$UPSTREAM_REPO" \
-            --title "$title" \
-            --body "$body"
-        env:
-          FORK_REPO: "DangoCat/extensions"
-          # This token has contents write permissions on fork repository
-          FORK_GH_TOKEN: "${{ secrets.UPDATE_TRANSLATIONS_FORK_GH_TOKEN }}"
-          UPSTREAM_REPO: "${{ github.repository }}"
-          # This token has pull request write permissions on upstream repository
-          UPSTREAM_GH_TOKEN: "${{ secrets.UPDATE_TRANSLATIONS_UPSTREAM_GH_TOKEN }}"
+          git add translations/extension-runtime.json translations/extension-metadata.json download-warnings.txt
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit -m "chore: update translations"
+          git pull --rebase origin master
+          git push origin master

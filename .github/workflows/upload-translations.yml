@@ -11,9 +11,7 @@ jobs:
   upload-translations:
     runs-on: ubuntu-latest
 
-    # This workflow is not useful to forks without setting up Transifex and modifying the
-    # workflow to use your organization, project, resources, API token, ...
-    if: ${{ github.repository == 'TurboWarp/extensions' && github.ref == 'refs/heads/master' }}
+    if: ${{ github.repository == 'Nitro-Bolt/extensions' && github.ref == 'refs/heads/master' }}
 
     steps:
       - name: Checkout
@@ -32,7 +30,7 @@ jobs:
         run: pnpm run upload-translations
         env:
           TRANSIFEX_TOKEN: "${{ secrets.TRANSIFEX }}"
-          TRANSIFEX_ORGANIZATION: "turbowarp"
-          TRANSIFEX_PROJECT: "turbowarp"
-          TRANSIFEX_RUNTIME_RESOURCE: "extensions"
+          TRANSIFEX_ORGANIZATION: "nitrobolt"
+          TRANSIFEX_PROJECT: "nitrobolt"
+          TRANSIFEX_RUNTIME_RESOURCE: "extension-runtime"
           TRANSIFEX_METADATA_RESOURCE: "extension-metadata"
