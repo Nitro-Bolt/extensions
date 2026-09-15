@@ -51,11 +51,11 @@ jobs:
           TRANSIFEX_METADATA_RESOURCE: "extension-metadata"
       - name: Commit and push updates
         run: |
-          if [[ ! $(git status --porcelain -- translations/extension-runtime.json translations/extension-metadata.json download-warnings.txt) ]]; then
+          if [[ ! $(git status --porcelain -- translations/extension-runtime.json translations/extension-metadata.json) ]]; then
             echo "No translation updates."
             exit 0
           fi
-          git add translations/extension-runtime.json translations/extension-metadata.json download-warnings.txt
+          git add translations/extension-runtime.json translations/extension-metadata.json
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git commit -m "chore: update translations"
