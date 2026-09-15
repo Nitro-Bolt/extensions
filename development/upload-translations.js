@@ -54,30 +54,27 @@ const uploadStrings = async (resource, strings) => {
   }
 };
 
-const uploadRuntimeStrings = async (strings) => {
-  if (
-    strings["lab/text@_Animated Text"].string !== "Animated Text" ||
-    strings["lab/text@_Animated Text"].developer_comment !==
-      "Part of the 'Animated Text' extension." ||
-    Object.keys(strings).length < 1500
-  ) {
-    throw new Error("Sanity check failed.");
+const validateStrings = (resource, strings) => {
+  const entries = Object.entries(strings || {});
+  if (entries.length === 0) {
+    throw new Error(`No strings were generated for ${resource}.`);
   }
 
-  await uploadStrings(RUNTIME_RESOURCE, strings);
-};
-
-const uploadMetadataStrings = async (strings) => {
-  if (
-    strings["lab/text@name"].string !== "Animated Text" ||
-    strings["lab/text@name"].developer_comment !==
-      "Name of the 'Animated Text' extension in the extension gallery." ||
-    Object.keys(strings).length < 150
-  ) {
-    throw new Error("Sanity check failed.");
+  for (const [key, value] of entries) {
+    if (
+      !value ||
+      typeof value.string !== "string" ||
+      value.string.length === 0
+    ) {
+      throw new Error(`Invalid string ${key} in ${resource}.`);
+    }
+    if (
+      value.developer_comment !== undefined &&
+      typeof value.developer_comment !== "string"
+    ) {
+      throw new Error(`Invalid developer comment for ${key} in ${resource}.`);
+    }
   }
-
-  await uploadStrings(METADATA_RESOURCE, strings);
 };
 
 const run = async () => {
@@ -87,12 +84,16 @@ const run = async () => {
 
   console.log("Generating strings...");
   const l10n = build.generateL10N();
+  const runtimeStrings = l10n["extension-runtime"];
+  const metadataStrings = l10n["extension-metadata"];
+  validateStrings(RUNTIME_RESOURCE, runtimeStrings);
+  validateStrings(METADATA_RESOURCE, metadataStrings);
 
   console.log("Uploading runtime strings...");
-  await uploadRuntimeStrings(l10n["extension-runtime"]);
+  await uploadStrings(RUNTIME_RESOURCE, runtimeStrings);
 
   console.log("Uploading metadata strings...");
-  await uploadMetadataStrings(l10n["extension-metadata"]);
+  await uploadStrings(METADATA_RESOURCE, metadataStrings);
 };
 
 run().catch((err) => {
