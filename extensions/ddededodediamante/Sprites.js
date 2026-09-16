@@ -327,7 +327,7 @@
         case "size":
           return sprite.size;
         case "layer":
-          return sprite.drawableID;
+          return runtime.targets.indexOf(sprite);
         case "volume":
           return sprite.volume;
         case "name":
