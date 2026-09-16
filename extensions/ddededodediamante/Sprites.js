@@ -209,6 +209,7 @@
               "costume #",
               "costume name",
               "size",
+              "layer",
               "volume",
               "name",
               "origin",
@@ -325,6 +326,8 @@
         }
         case "size":
           return sprite.size;
+        case "layer":
+          return sprite.drawableID;
         case "volume":
           return sprite.volume;
         case "name":
