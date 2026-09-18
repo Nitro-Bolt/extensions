@@ -4,7 +4,7 @@
 // By: ddededodediamante <https://github.com/ddededodediamante/>
 // License: MPL-2.0
 
-// Version V.1.1.0
+// Version V.1.2.0
 
 (function (Scratch) {
   "use strict";
@@ -15,6 +15,7 @@
   }
 
   const runtime = Scratch.vm.runtime;
+  const Cast = Scratch.Cast;
 
   const origVisualReport = runtime.visualReport;
   /**
@@ -79,6 +80,18 @@
         name: Scratch.translate("Sprites"),
         color1: "#737FFF",
         blocks: [
+          {
+            opcode: "rotationStyleMenu",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "[MENU]",
+            hideFromPalette: true,
+            arguments: {
+              MENU: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITE_ROTATION_STYLES",
+              }
+            }
+          },
           {
             opcode: "sprite",
             blockType: Scratch.BlockType.REPORTER,
@@ -166,6 +179,25 @@
               },
             },
           },
+          {
+            opcode: "setSpriteProperty",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set [MENU] of [ID] to [VALUE]"),
+            arguments: {
+              MENU: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITE_SETTABLE_PROPERTIES",
+              },
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITES",
+              },
+              VALUE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "0",
+              },
+            },
+          },
           "---",
           {
             opcode: "cloneSprite",
@@ -202,26 +234,85 @@
           SPRITE_PROPERTIES: {
             acceptReporters: true,
             items: [
-              "x position",
-              "y position",
-              "direction",
-              "rotation style",
-              "costume #",
-              "costume name",
-              "size",
-              "layer",
-              "volume",
-              "name",
-              "origin",
+              { text: Scratch.translate("x position"), value: "x position" },
+              { text: Scratch.translate("y position"), value: "y position" },
+              { text: Scratch.translate("direction"), value: "direction" },
+              { text: Scratch.translate("rotation style"), value: "rotation style" },
+              { text: Scratch.translate("costume #"), value: "costume #" },
+              { text: Scratch.translate("costume name"), value: "costume name" },
+              { text: Scratch.translate("size"), value: "size" },
+              { text: Scratch.translate("layer"), value: "layer" },
+              { text: Scratch.translate("volume"), value: "volume" },
+              { text: Scratch.translate("name"), value: "name" },
+              { text: Scratch.translate("origin"), value: "origin" },
             ],
+          },
+          SPRITE_ROTATION_STYLES: {
+            acceptReporters: false,
+            items: [
+              { text: Scratch.translate("all around"), value: "all around" },
+              { text: Scratch.translate("left-right"), value: "left-right" },
+              { text: Scratch.translate("don't rotate"), value: "don't rotate" },
+            ],
+          },
+          SPRITE_SETTABLE_PROPERTIES: {
+            items: [
+              { text: Scratch.translate("x position"), value: "x position" },
+              { text: Scratch.translate("y position"), value: "y position" },
+              { text: Scratch.translate("direction"), value: "direction" },
+              { text: Scratch.translate("rotation style"), value: "rotation style" },
+              { text: Scratch.translate("costume #"), value: "costume #" },
+              { text: Scratch.translate("costume name"), value: "costume name" },
+              { text: Scratch.translate("size"), value: "size" },
+              { text: Scratch.translate("layer"), value: "layer" },
+              { text: Scratch.translate("volume"), value: "volume" },
+              { text: Scratch.translate("name"), value: "name" },
+              { text: Scratch.translate("visible"), value: "visible" },
+              { text: Scratch.translate("draggable"), value: "draggable" },
+            ],
+            mutator: {
+              "x position": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
+              "y position": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
+              "direction": { arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } } },
+              "rotation style": {
+                arguments: {
+                  VALUE: { type: Scratch.ArgumentType.STRING, shadow: "rotationStyleMenu" }
+                }
+              },
+              "costume #": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
+              "costume name": { arguments: { VALUE: { type: Scratch.ArgumentType.STRING } } },
+              "size": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
+              "layer": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
+              "volume": { arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } } },
+              "name": { arguments: { VALUE: { type: Scratch.ArgumentType.STRING } } },
+              "visible": {
+                arguments: {
+                  VALUE: { type: Scratch.ArgumentType.BOOLEAN }
+                }
+              },
+              "draggable": {
+                arguments: {
+                  VALUE: { type: Scratch.ArgumentType.BOOLEAN }
+                }
+              }
+            }
           },
           SPRITE_BOOLS: {
             acceptReporters: true,
-            items: ["visible", "draggable", "being dragged", "a clone"],
+            items: [
+              { text: Scratch.translate("visible"), value: "visible" },
+              { text: Scratch.translate("draggable"), value: "draggable" },
+              { text: Scratch.translate("being dragged"), value: "being dragged" },
+              { text: Scratch.translate("a clone"), value: "a clone" },
+            ],
           },
           SPRITE_LISTS: {
             acceptReporters: true,
-            items: ["costumes", "sounds", "clones"],
+            items: [
+              { text: Scratch.translate("costumes"), value: "costumes" },
+              { text: Scratch.translate("sounds"), value: "sounds" },
+              { text: Scratch.translate("clones"), value: "clones" },
+            ],
           },
         },
       };
@@ -327,7 +418,7 @@
         case "size":
           return sprite.size;
         case "layer":
-          return runtime.targets.indexOf(sprite);
+          return runtime.executableTargets.indexOf(sprite);
         case "volume":
           return sprite.volume;
         case "name":
@@ -372,6 +463,76 @@
       if (!sprite2) return false;
 
       return sprite.isTouchingTarget(sprite2);
+    }
+
+    rotationStyleMenu({ MENU }) {
+      return MENU;
+    }
+
+    setSpriteProperty({ ID, MENU, VALUE }) {
+      const sprite = this.findSprite(ID);
+      if (!sprite) return;
+
+      switch (Cast.toString(MENU)) {
+        case "x position":
+          sprite.setXY(Cast.toNumber(VALUE), sprite.y);
+          break;
+        case "y position":
+          sprite.setXY(sprite.x, Cast.toNumber(VALUE));
+          break;
+        case "direction":
+          sprite.setDirection(Cast.toNumber(VALUE));
+          break;
+        case "rotation style": {
+          sprite.setRotationStyle(Cast.toString(VALUE));
+          break;
+        }
+        case "costume #":
+          sprite.setCostume(Cast.toNumber(VALUE) - 1);
+          break;
+        case "costume name": {
+          const index = sprite.getCostumeIndexByName(Cast.toString(VALUE));
+          if (index !== -1) sprite.setCostume(index);
+          break;
+        }
+        case "size":
+          sprite.setSize(Cast.toNumber(VALUE));
+          break;
+        case "layer": {
+          const order = runtime.executableTargets;
+          const current = order.indexOf(sprite);
+          if (current < 1) break;
+          const wanted = Math.max(
+            1,
+            Math.min(order.length - 1, Math.round(Cast.toNumber(VALUE)))
+          );
+          const delta = wanted - current;
+          if (delta > 0) sprite.goForwardLayers(delta);
+          else if (delta < 0) sprite.goBackwardLayers(-delta);
+          break;
+        }
+        case "volume": {
+          sprite.volume = Math.max(0, Math.min(100, Cast.toNumber(VALUE)));
+          runtime.ext_scratch3_sound?._syncEffectsForTarget?.(sprite);
+          break;
+        }
+        case "name": {
+          const name = Cast.toString(VALUE);
+          if (!name || name === sprite.getName()) break;
+          try {
+            Scratch.vm.renameSprite(sprite.id, name);
+          } catch (error) {
+            console.warn("Sprites: could not rename sprite", error);
+          }
+          break;
+        }
+        case "visible":
+          sprite.setVisible(Cast.toBoolean(VALUE));
+          break;
+        case "draggable":
+          sprite.setDraggable(Cast.toBoolean(VALUE));
+          break;
+      }
     }
 
     /**
