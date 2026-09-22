@@ -288,7 +288,7 @@
             blockType: BlockType.COMMAND,
             arguments: {
               VAR: {
-                type: ArgumentType.VARIABLE
+                type: ArgumentType.VARIABLE,
               },
               VALUE: {
                 type: ArgumentType.NUMBER,
@@ -380,7 +380,7 @@
             text: [
               Scratch.translate(
                 "tween [VALUE] [START] to [END] over [SEC] seconds using [MODE] ease [DIRECTION]"
-              )
+              ),
             ],
             branchCount: 1,
             arguments: {
