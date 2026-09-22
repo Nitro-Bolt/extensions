@@ -104,7 +104,7 @@
               A: { type: Scratch.ArgumentType.ARRAY },
               B: { type: Scratch.ArgumentType.ARRAY },
             },
-            switches: ["subtract"]
+            switches: ["subtract"],
           },
           {
             opcode: "subtract",
@@ -114,7 +114,7 @@
               A: { type: Scratch.ArgumentType.ARRAY },
               B: { type: Scratch.ArgumentType.ARRAY },
             },
-            switches: ["add"]
+            switches: ["add"],
           },
           {
             opcode: "scale",
@@ -124,7 +124,7 @@
               VEC: { type: Scratch.ArgumentType.ARRAY },
               S: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
             },
-            switches: ["divide"]
+            switches: ["divide"],
           },
           {
             opcode: "divide",
@@ -134,7 +134,7 @@
               VEC: { type: Scratch.ArgumentType.ARRAY },
               S: { type: Scratch.ArgumentType.NUMBER, defaultValue: 2 },
             },
-            switches: ["scale"]
+            switches: ["scale"],
           },
           {
             opcode: "lerp",
@@ -255,7 +255,7 @@
               VEC: { type: Scratch.ArgumentType.ARRAY },
             },
             color1: "#4c97ff",
-            switches: ["pointTowards"]
+            switches: ["pointTowards"],
           },
           {
             opcode: "pointTowards",
@@ -265,7 +265,7 @@
               VEC: { type: Scratch.ArgumentType.ARRAY },
             },
             color1: "#4c97ff",
-            switches: ["setPosition"]
+            switches: ["setPosition"],
           },
           {
             opcode: "setStretch",

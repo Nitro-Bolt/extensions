@@ -89,8 +89,8 @@
               MENU: {
                 type: Scratch.ArgumentType.STRING,
                 menu: "SPRITE_ROTATION_STYLES",
-              }
-            }
+              },
+            },
           },
           {
             opcode: "sprite",
@@ -237,9 +237,15 @@
               { text: Scratch.translate("x position"), value: "x position" },
               { text: Scratch.translate("y position"), value: "y position" },
               { text: Scratch.translate("direction"), value: "direction" },
-              { text: Scratch.translate("rotation style"), value: "rotation style" },
+              {
+                text: Scratch.translate("rotation style"),
+                value: "rotation style",
+              },
               { text: Scratch.translate("costume #"), value: "costume #" },
-              { text: Scratch.translate("costume name"), value: "costume name" },
+              {
+                text: Scratch.translate("costume name"),
+                value: "costume name",
+              },
               { text: Scratch.translate("size"), value: "size" },
               { text: Scratch.translate("layer"), value: "layer" },
               { text: Scratch.translate("volume"), value: "volume" },
@@ -252,7 +258,10 @@
             items: [
               { text: Scratch.translate("all around"), value: "all around" },
               { text: Scratch.translate("left-right"), value: "left-right" },
-              { text: Scratch.translate("don't rotate"), value: "don't rotate" },
+              {
+                text: Scratch.translate("don't rotate"),
+                value: "don't rotate",
+              },
             ],
           },
           SPRITE_SETTABLE_PROPERTIES: {
@@ -260,9 +269,15 @@
               { text: Scratch.translate("x position"), value: "x position" },
               { text: Scratch.translate("y position"), value: "y position" },
               { text: Scratch.translate("direction"), value: "direction" },
-              { text: Scratch.translate("rotation style"), value: "rotation style" },
+              {
+                text: Scratch.translate("rotation style"),
+                value: "rotation style",
+              },
               { text: Scratch.translate("costume #"), value: "costume #" },
-              { text: Scratch.translate("costume name"), value: "costume name" },
+              {
+                text: Scratch.translate("costume name"),
+                value: "costume name",
+              },
               { text: Scratch.translate("size"), value: "size" },
               { text: Scratch.translate("layer"), value: "layer" },
               { text: Scratch.translate("volume"), value: "volume" },
@@ -271,38 +286,62 @@
               { text: Scratch.translate("draggable"), value: "draggable" },
             ],
             mutator: {
-              "x position": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
-              "y position": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
-              "direction": { arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } } },
+              "x position": {
+                arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } },
+              },
+              "y position": {
+                arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } },
+              },
+              direction: {
+                arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } },
+              },
               "rotation style": {
                 arguments: {
-                  VALUE: { type: Scratch.ArgumentType.STRING, shadow: "rotationStyleMenu" }
-                }
+                  VALUE: {
+                    type: Scratch.ArgumentType.STRING,
+                    shadow: "rotationStyleMenu",
+                  },
+                },
               },
-              "costume #": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
-              "costume name": { arguments: { VALUE: { type: Scratch.ArgumentType.STRING } } },
-              "size": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
-              "layer": { arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } } },
-              "volume": { arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } } },
-              "name": { arguments: { VALUE: { type: Scratch.ArgumentType.STRING } } },
-              "visible": {
-                arguments: {
-                  VALUE: { type: Scratch.ArgumentType.BOOLEAN }
-                }
+              "costume #": {
+                arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } },
               },
-              "draggable": {
+              "costume name": {
+                arguments: { VALUE: { type: Scratch.ArgumentType.STRING } },
+              },
+              size: {
+                arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } },
+              },
+              layer: {
+                arguments: { VALUE: { type: Scratch.ArgumentType.NUMBER } },
+              },
+              volume: {
+                arguments: { VALUE: { type: Scratch.ArgumentType.ANGLE } },
+              },
+              name: {
+                arguments: { VALUE: { type: Scratch.ArgumentType.STRING } },
+              },
+              visible: {
                 arguments: {
-                  VALUE: { type: Scratch.ArgumentType.BOOLEAN }
-                }
-              }
-            }
+                  VALUE: { type: Scratch.ArgumentType.BOOLEAN },
+                },
+              },
+              draggable: {
+                arguments: {
+                  VALUE: { type: Scratch.ArgumentType.BOOLEAN },
+                },
+              },
+            },
           },
           SPRITE_BOOLS: {
             acceptReporters: true,
             items: [
               { text: Scratch.translate("visible"), value: "visible" },
               { text: Scratch.translate("draggable"), value: "draggable" },
-              { text: Scratch.translate("being dragged"), value: "being dragged" },
+              {
+                text: Scratch.translate("being dragged"),
+                value: "being dragged",
+              },
               { text: Scratch.translate("a clone"), value: "a clone" },
             ],
           },
