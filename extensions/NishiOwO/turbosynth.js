@@ -28,7 +28,7 @@
     WaveSynth_Reset,
     WaveSynth_Destroy;
   let loaded = { TurboSynthWASM: null, JZZip: null, AudioPlayer: null };
-  let florestanZip;
+  let eawpatsZip;
 
   let synth = {};
 
@@ -42,7 +42,7 @@
     loaded.TurboSynthWASM = TurboSynthWASM; // eslint-disable-line
   } else {
     loaded.TurboSynthWASM = await Scratch.external.evalAndReturn(
-      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/turbosynthwasm.js",
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/2eb72d7e693dd41019aad2417dc28df5fd55c528/web/turbosynthwasm.js",
       "TurboSynthWASM"
     );
   }
@@ -119,17 +119,17 @@
     loaded.AudioPlayer = AudioPlayer; // eslint-disable-line
   } else {
     loaded.AudioPlayer = await Scratch.external.evalAndReturn(
-      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/audioplayer.js",
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/2eb72d7e693dd41019aad2417dc28df5fd55c528/web/audioplayer.js",
       "AudioPlayer"
     );
   }
 
   /* DO NOT REMOVE THE COMMENT BELOW!!! */
-  /* EMBED FLORESTAN.ZIP HERE */
+  /* EMBED EAWPATS.ZIP HERE */
 
   if (!embedded) {
-    florestanZip = await Scratch.external.dataURL(
-      "https://raw.githubusercontent.com/pyrite-dev/pmidi/42a8c0657b71c54a59a2a7bc0f74e74907afa24d/web/florestan.zip"
+    eawpatsZip = await Scratch.external.dataURL(
+      "https://raw.githubusercontent.com/pyrite-dev/pmidi/2eb72d7e693dd41019aad2417dc28df5fd55c528/web/eawpats.zip"
     );
   }
 
@@ -878,7 +878,7 @@
     }
 
     defaultPatches() {
-      return florestanZip;
+      return eawpatsZip;
     }
 
     playNote(args) {
