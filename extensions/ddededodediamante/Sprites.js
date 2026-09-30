@@ -209,6 +209,19 @@
                 menu: "SPRITES",
               },
             },
+            hideFromPalette: true,
+          },
+          {
+            opcode: "cloneSpriteDual",
+            blockType: Scratch.BlockType.COMMAND,
+            dualType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("create clone of [ID]"),
+            arguments: {
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITES",
+              },
+            },
           },
           {
             opcode: "runAsSprite",
@@ -645,7 +658,11 @@
       this.runThreadInSprite(util.thread, util.target, sprite);
     }
 
-    cloneSprite({ ID }) {
+    cloneSprite(args) {
+      return this.cloneSpriteDual(args);
+    }
+
+    cloneSpriteDual({ ID }) {
       const sprite = this.findSprite(ID);
       if (!sprite) return;
 
