@@ -58,10 +58,38 @@
           "---",
 
           {
+            opcode: "execute",
+            func: "compilerOnly",
+            text: Scratch.translate("execute [LAMBDA] with [ARGS]"),
+            blockType: Scratch.BlockType.COMMAND,
+            dualType: Scratch.BlockType.REPORTER,
+            allowDropAnywhere: true,
+            arguments: {
+              LAMBDA: {
+                type: Scratch.ArgumentType.OBJECT,
+              },
+              ARGS: {
+                type: Scratch.ArgumentType.EXTENDABLE,
+                text: Scratch.translate("[ARG]"),
+                arguments: {
+                  ARG: {
+                    type: Scratch.ArgumentType.STRING,
+                    defaultValue: "",
+                  },
+                },
+              },
+            },
+            compiler: {
+              input: this.compileExecuteReport,
+              stack: this.compileExecuteCommand,
+            },
+          },
+          {
             opcode: "executeCommand",
             func: "compilerOnly",
             text: Scratch.translate("execute [LAMBDA] with [ARGS]"),
             blockType: Scratch.BlockType.COMMAND,
+            hideFromPalette: true,
             arguments: {
               LAMBDA: {
                 type: Scratch.ArgumentType.OBJECT,
@@ -85,6 +113,7 @@
             text: Scratch.translate("execute [LAMBDA] with [ARGS]"),
             blockType: Scratch.BlockType.REPORTER,
             allowDropAnywhere: true,
+            hideFromPalette: true,
             arguments: {
               LAMBDA: {
                 type: Scratch.ArgumentType.OBJECT,

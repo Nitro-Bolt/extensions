@@ -19,14 +19,14 @@ list, object, or any other place that accepts it.
 
 ## Executing a Function
 
-Use the command version of the execute block when you only need to run the
-function:
+The execute block works as both a command and a reporter. Place it in a script
+when you only need to run the function:
 
 ```scratch
 execute {} with @addInput :: #FF894D
 ```
 
-Use the reporter version when the function returns a value:
+Place the same block in an input when the function returns a value:
 
 ```scratch
 (execute {} with @addInput :: #FF894D)
