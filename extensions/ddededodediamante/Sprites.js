@@ -4,7 +4,7 @@
 // By: ddededodediamante <https://github.com/ddededodediamante/>
 // License: MPL-2.0
 
-// Version V.1.2.0
+// Version V.1.2.1
 
 (function (Scratch) {
   "use strict";
