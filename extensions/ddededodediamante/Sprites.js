@@ -200,6 +200,41 @@
           },
           "---",
           {
+            opcode: "getSpriteVariable",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("variable [NAME] of [ID]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my variable",
+              },
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITES",
+              },
+            },
+          },
+          {
+            opcode: "setSpriteVariable",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set variable [NAME] of [ID] to [VALUE]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my variable",
+              },
+              ID: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SPRITES",
+              },
+              VALUE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "0",
+              },
+            },
+          },
+          "---",
+          {
             opcode: "cloneSprite",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("create clone of [ID]"),
@@ -584,6 +619,20 @@
         case "draggable":
           sprite.setDraggable(Cast.toBoolean(VALUE));
           break;
+      }
+    }
+
+    getSpriteVariable({ ID, NAME }) {
+      const sprite = this.findSprite(ID);
+      const variable = sprite?.lookupVariableByNameAndType(Cast.toString(NAME), "");
+      return variable ? variable.value : "";
+    }
+
+    setSpriteVariable({ ID, NAME, VALUE }) {
+      const sprite = this.findSprite(ID);
+      const variable = sprite?.lookupVariableByNameAndType(Cast.toString(NAME), "");
+      if (variable) {
+        variable.value = VALUE;
       }
     }
 
