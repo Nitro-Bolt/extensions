@@ -13,7 +13,7 @@ importers:
         version: 1.1.1
       '@nitro-bolt/types':
         specifier: github:Nitro-Bolt/types#nb
-        version: https://codeload.github.com/Nitro-Bolt/types/tar.gz/d672a3d8a5e328748f5301d8df92af1102392594
+        version: https://codeload.github.com/Nitro-Bolt/types/tar.gz/796c9ea2049a2ee0e6c70a1864ccb849f3f66485
       '@turbowarp/json':
         specifier: ^0.1.2
         version: 0.1.2
@@ -117,8 +117,8 @@ packages:
   '@nitro-bolt/scratchblocks@1.1.1':
     resolution: {integrity: sha512-7Udoxgq5wuSuLjseTur10iFnYz3lmQefxIGv2jcDqGO0Sbus5g5nOl8TcIoKaJB6l0N/c34PvYor9K3o7ncnFQ==}
 
-  '@nitro-bolt/types@https://codeload.github.com/Nitro-Bolt/types/tar.gz/d672a3d8a5e328748f5301d8df92af1102392594':
-    resolution: {tarball: https://codeload.github.com/Nitro-Bolt/types/tar.gz/d672a3d8a5e328748f5301d8df92af1102392594}
+  '@nitro-bolt/types@https://codeload.github.com/Nitro-Bolt/types/tar.gz/796c9ea2049a2ee0e6c70a1864ccb849f3f66485':
+    resolution: {tarball: https://codeload.github.com/Nitro-Bolt/types/tar.gz/796c9ea2049a2ee0e6c70a1864ccb849f3f66485}
     version: 1.0.0
 
   '@transifex/api@7.1.5':
@@ -811,7 +811,7 @@ snapshots:
 
   '@nitro-bolt/scratchblocks@1.1.1': {}
 
-  '@nitro-bolt/types@https://codeload.github.com/Nitro-Bolt/types/tar.gz/d672a3d8a5e328748f5301d8df92af1102392594': {}
+  '@nitro-bolt/types@https://codeload.github.com/Nitro-Bolt/types/tar.gz/796c9ea2049a2ee0e6c70a1864ccb849f3f66485': {}
 
   '@transifex/api@7.1.5':
     dependencies:
