@@ -376,11 +376,8 @@
   // NB Pen Papers keep the selected paper on the built-in Pen extension.
   // Ask it for the skin each time because papers can be switched or created lazily.
   const getCurrentPenSkinId = () => runtime.ext_pen._getPenLayerID();
-  const getCurrentPhysicalPenSkinId = () =>
-    renderer.getPenSkinIdAt(getCurrentPenSkinId(), 0, 0);
 
   //?Override pen Clear with pen+
-  const penClear = renderer.penClear;
   renderer.penClear = (penSkinID) => {
     lastFB = gl.getParameter(gl.FRAMEBUFFER_BINDING);
     //Pen+ Overrides default pen Clearing
@@ -397,7 +394,9 @@
     );
 
     //Old clearing
-    penClear.call(renderer, penSkinID);
+    renderer.dirty = true;
+    const skin = /** @type {PenSkin} */ renderer._allSkins[penSkinID];
+    skin.clear();
   };
 
   class extension {
@@ -743,7 +742,7 @@
           gl.disable(gl.CULL_FACE);
         }
         this.inDrawRegion = false;
-        const penSkin = renderer._allSkins[getCurrentPhysicalPenSkinId()];
+        const penSkin = renderer._allSkins[getCurrentPenSkinId()];
         gl.bindFramebuffer(gl.FRAMEBUFFER, penSkin._framebuffer.framebuffer);
 
         this.renderFunctions.reRenderPenLayer();
@@ -6303,9 +6302,9 @@
 
     //By Sharkpool-SP commented by Alex
     getPenRenderLayer() {
-      const penSkinId = runtime.ext_pen?._getPenLayerID();
-      // Grabbing the center drawable preserves the legacy stage-sized export.
-      const penID = renderer.getPenDrawableIdAt(penSkinId, 0, 0);
+      runtime.ext_pen?._getPenLayerID();
+      //Grabbing the drawable for the pen layer
+      const penID = vm.runtime.ext_pen?._penDrawableId;
       if (penID == null || penID < 0) return "";
 
       //If we can grab it create a canvas and parse the image data into a data uri

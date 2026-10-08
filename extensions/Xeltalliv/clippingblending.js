@@ -39,8 +39,6 @@
   let height = 0;
   let scratchUnitWidth = 480;
   let scratchUnitHeight = 360;
-  let penOffsetX = 0;
-  let penOffsetY = 0;
   let penDirty = false;
   const publicApi =
     runtime.ext_clippingblendingapi ?? (runtime.ext_clippingblendingapi = {});
@@ -86,7 +84,7 @@
         skin._framebuffer &&
         skin._framebuffer.framebuffer === framebuffer
       ) {
-        return { framebuffer: skin._framebuffer, skin };
+        return skin._framebuffer;
       }
     }
     return null;
@@ -98,24 +96,15 @@
         toCanvas = true;
         toCorrectThing = true;
         flipY = false;
-        penOffsetX = 0;
-        penOffsetY = 0;
         width = canvas.width;
         height = canvas.height;
       } else {
-        const penFramebuffer = getPenFramebufferInfo(framebuffer);
-        toCorrectThing = Boolean(penFramebuffer);
-        if (penFramebuffer) {
-          const fbInfo = penFramebuffer.framebuffer;
+        const fbInfo = getPenFramebufferInfo(framebuffer);
+        toCorrectThing = Boolean(fbInfo);
+        if (fbInfo) {
           flipY = true;
-          [penOffsetX, penOffsetY] = penFramebuffer.skin._tiledPenOffset || [
-            0, 0,
-          ];
           width = fbInfo.width;
           height = fbInfo.height;
-        } else {
-          penOffsetX = 0;
-          penOffsetY = 0;
         }
       }
     }
@@ -134,20 +123,14 @@
   function setupModes(clipbox, blendMode, flipY) {
     if (clipbox) {
       gl.enable(gl.SCISSOR_TEST);
-      let x =
-        (((clipbox.x_min - penOffsetX) / scratchUnitWidth + 0.5) * width) | 0;
-      let y =
-        (((clipbox.y_min - penOffsetY) / scratchUnitHeight + 0.5) * height) | 0;
-      let x2 =
-        (((clipbox.x_max - penOffsetX) / scratchUnitWidth + 0.5) * width) | 0;
-      let y2 =
-        (((clipbox.y_max - penOffsetY) / scratchUnitHeight + 0.5) * height) | 0;
+      let x = ((clipbox.x_min / scratchUnitWidth + 0.5) * width) | 0;
+      let y = ((clipbox.y_min / scratchUnitHeight + 0.5) * height) | 0;
+      let x2 = ((clipbox.x_max / scratchUnitWidth + 0.5) * width) | 0;
+      let y2 = ((clipbox.y_max / scratchUnitHeight + 0.5) * height) | 0;
       let w = x2 - x;
       let h = y2 - y;
       if (flipY) {
-        y =
-          ((-(clipbox.y_max - penOffsetY) / scratchUnitHeight + 0.5) * height) |
-          0;
+        y = ((-clipbox.y_max / scratchUnitHeight + 0.5) * height) | 0;
       }
       gl.scissor(x, y, w, h);
     } else {
@@ -273,13 +256,10 @@
             clipbox.x_max != lastClipbox.x_max ||
             clipbox.y_max != lastClipbox.y_max))
       ) {
-        const skinIds = renderer.getPenSkinIds(ext_pen._penSkinId);
-        for (const skinId of skinIds) {
-          const skin = renderer._allSkins[skinId];
-          if (skin && (skin.attribute_index || skin.a_lineColorIndex)) {
-            // Supporting both before and after https://github.com/TurboWarp/scratch-render/pull/11
-            skin._flushLines();
-          }
+        const skin = renderer._allSkins[ext_pen._penSkinId];
+        if (skin && (skin.attribute_index || skin.a_lineColorIndex)) {
+          // Supporting both before and after https://github.com/TurboWarp/scratch-render/pull/11
+          skin._flushLines();
         }
         lastTarget = target;
         if (clipbox) {
@@ -371,13 +351,13 @@
       };
 
       const penStamp = renderer.penStamp;
-      renderer.penStamp = function (penSkinId, stampId, ...args) {
+      renderer.penStamp = function (penSkinId, stampId) {
         const drawable = this._allDrawables[stampId];
         if (drawable && activePrintModes) {
           drawable.clipbox = activePrintModes.clipbox;
           drawable.blendMode = activePrintModes.blendMode;
         }
-        return penStamp.call(this, penSkinId, stampId, ...args);
+        return penStamp.call(this, penSkinId, stampId);
       };
     }
   };
