@@ -206,7 +206,7 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my variable",
+                defaultValue: Scratch.translate("my variable"),
               },
               ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -221,7 +221,7 @@
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my variable",
+                defaultValue: Scratch.translate("my variable"),
               },
               ID: {
                 type: Scratch.ArgumentType.STRING,
