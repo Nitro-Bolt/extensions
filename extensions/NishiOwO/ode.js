@@ -93,6 +93,7 @@
     dJointSetHinge2Anchor,
     dJointSetHinge2Axis1,
     dJointSetHinge2Axis2,
+    dJointSetHinge2Axes,
     dJointGetHinge2Anchor,
     dJointGetHinge2Anchor2,
     dJointGetHinge2Axis1,
@@ -658,6 +659,11 @@
   ]);
   dJointSetHinge2Axis2 = Module.cwrap("dJointSetHinge2Axis2", null, [
     "number",
+    "number",
+    "number",
+    "number",
+  ]);
+  dJointSetHinge2Axes = Module.cwrap("dJointSetHinge2Axes", null, [
     "number",
     "number",
     "number",
@@ -1592,11 +1598,35 @@
               ARRAY: {
                 type: arg_array,
                 defaultValue: from_array([0, 0, 0]),
+                ...arg_array_obj,
               },
               TYPE: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "primary anchor",
                 menu: "jointArrayType",
+              },
+            },
+          },
+          {
+            opcode: "jointSetAxes",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate(
+              "set axes of joint [JOINT] to [AXIS1] and [AXIS2]"
+            ),
+            arguments: {
+              JOINT: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              AXIS1: {
+                type: arg_array,
+                defaultValue: from_array([0, 0, 0]),
+                ...arg_array_obj,
+              },
+              AXIS2: {
+                type: arg_array,
+                defaultValue: from_array([0, 0, 0]),
+                ...arg_array_obj,
               },
             },
           },
@@ -1695,6 +1725,7 @@
           {
             opcode: "divVecToVector",
             blockType: Scratch.BlockType.REPORTER,
+            ...blk_array_obj,
             text: Scratch.translate("div vector [INPUT] to vector"),
             arguments: {
               INPUT: {
@@ -1710,6 +1741,7 @@
               INPUT: {
                 type: arg_array,
                 defaultValue: from_array([0, 0, 0]),
+                ...arg_array_obj,
               },
             },
           },
@@ -1717,6 +1749,7 @@
             opcode: "divQuatToQuaternion",
             text: Scratch.translate("div quaternion [INPUT] to quaternion"),
             blockType: Scratch.BlockType.REPORTER,
+            ...blk_array_obj,
             arguments: {
               INPUT: {
                 ...divVecQuat.Quat.Argument,
@@ -1731,6 +1764,7 @@
               INPUT: {
                 type: arg_array,
                 defaultValue: from_array([0, 0, 0, 0]),
+                ...arg_array_obj,
               },
             },
           }
@@ -2887,6 +2921,39 @@
       return this["_jointGet" + joint_menu_to_func(type)]({
         JOINT: args.JOINT,
       });
+    }
+
+    jointSetAxes(args) {
+      const joint = Scratch.Cast.toString(args.JOINT);
+      const axis1 = [...to_f32array(args.AXIS1)];
+      const axis2 = [...to_f32array(args.AXIS2)];
+
+      if (!joints[joint] || axis1.length != 3 || axis2.length != 3) return;
+
+      let m;
+      switch (joints[joint].type) {
+        case dJointCreateHinge2:
+          m = dJointSetHinge2Axes;
+          break;
+      }
+      if (!m) return;
+
+      const ptr1 = Module._malloc(Module.HEAPF64.BYTES_PER_ELEMENT * 4);
+      const ptr2 = Module._malloc(Module.HEAPF64.BYTES_PER_ELEMENT * 4);
+
+      Module.HEAPF64.set(
+        new Float64Array(axis1),
+        ptr1 / Module.HEAPF64.BYTES_PER_ELEMENT
+      );
+      Module.HEAPF64.set(
+        new Float64Array(axis2),
+        ptr2 / Module.HEAPF64.BYTES_PER_ELEMENT
+      );
+
+      m(joints[joint].joint, ptr1, ptr2);
+
+      Module._free(ptr2);
+      Module._free(ptr1);
     }
 
     jointSetArray(args) {
