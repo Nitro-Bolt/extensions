@@ -17,6 +17,15 @@
   const runtime = Scratch.vm.runtime;
   const Cast = Scratch.Cast;
 
+  function _escapeHTML(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   const origVisualReport = runtime.visualReport;
   /**
    * @param {VM.RenderedTarget} target
@@ -35,8 +44,8 @@
           ?.getCostumes()
           ?.[_target.currentCostume]?.asset?.encodeDataURI();
         customHtml = `<div style="display: flex; flex-direction: column; justify-content: center;">
-        <span>${_target?.getName()}${!_target.isOriginal ? " <span><small>(clone)</small></span>" : ""}</span>
-        <img src="${costume}" style="padding-top: 8px; padding-right: 15px; padding-left: 15px; max-width: 130px; max-height: 130px;">
+        <span>${_escapeHTML(_target?.getName())}${!_target.isOriginal ? " <span><small>(clone)</small></span>" : ""}</span>
+        <img src="${_escapeHTML(costume)}" style="padding-top: 8px; padding-right: 15px; padding-left: 15px; max-width: 130px; max-height: 130px;">
         </div>`;
       }
     }
