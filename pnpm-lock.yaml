@@ -45,9 +45,15 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0
     devDependencies:
+      '@eslint/js':
+        specifier: 9.39.1
+        version: 9.39.1
       '@transifex/api':
         specifier: ^7.1.5
         version: 7.1.5
+      globals:
+        specifier: 14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.6.0
         version: 3.6.2

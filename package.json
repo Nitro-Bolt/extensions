@@ -45,7 +45,9 @@
     "@transifex/api": "^7.1.5",
     "prettier": "^3.6.0",
     "spdx-expression-parse": "^4.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@eslint/js": "9.39.1",
+    "globals": "14.0.0"
   },
   "private": true,
   "pnpm": {
